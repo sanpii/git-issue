@@ -1,0 +1,42 @@
+#!/bin/sh
+
+USAGE='[help]'
+LONG_USAGE='git issue help
+    print long help message.'
+
+OPTIONS_SPEC=
+. git-sh-setup
+
+function_exists()
+{
+    function=$1
+
+    type $function > /dev/null 2>&1
+}
+
+warn()
+{
+    echo "$@" >&2;
+}
+
+die()
+{
+    warn "$@"
+    exit 1
+}
+
+git_issue_help()
+{
+    git issue -h
+}
+
+if [ $# -eq 0 ]
+then
+    usage
+else
+    cmd="$1"
+    shift
+
+    function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
+    git_issue_${cmd}
+fi
