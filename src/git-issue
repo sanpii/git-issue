@@ -1,11 +1,15 @@
 #!/bin/sh
 
-USAGE='[help]'
+USAGE='[help|init]'
 LONG_USAGE='git issue help
-    print long help message.'
+    print long help message.
+git issue init
+    initialize the issue tracker.'
 
 OPTIONS_SPEC=
 . git-sh-setup
+
+ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 function_exists()
 {
@@ -25,9 +29,35 @@ die()
     exit 1
 }
 
+git_local_branch_exists()
+{
+    local name=$1
+
+    git branch --no-color | grep -q "$name"
+}
+
+git_have_changes()
+{
+    test -n "$(git status --porcelain)"
+}
+
 git_issue_help()
 {
     git issue -h
+}
+
+git_issue_init()
+{
+    local old_rev=$(git rev-parse --abbrev-ref HEAD)
+
+    git_local_branch_exists $ISSUE_BRANCH && die 'Git issue already initialized.'
+    git_have_changes && die "Cannot initialized: You have unstaged changes.\nPlease commit or stash them."
+
+    git checkout -q --orphan $ISSUE_BRANCH
+    [ -n "$(git ls-files)" ] && git rm -qf $(git ls-files)
+    git commit -q --allow-empty -m 'git issue init'
+    git checkout -q $old_rev
+    echo 'Git issue initialized.'
 }
 
 if [ $# -eq 0 ]
