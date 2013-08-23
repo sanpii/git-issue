@@ -11,6 +11,7 @@ git issue new
 OPTIONS_SPEC=
 . git-sh-setup
 
+OLD_REV=$(git rev-parse --abbrev-ref HEAD)
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 QUIET=false
@@ -76,6 +77,19 @@ git_issue_get_last_id()
     echo $id
 }
 
+git_issue_switch_branch()
+{
+    git_local_branch_exists $ISSUE_BRANCH || die 'Git issue not initialized.'
+    git_have_changes && die "You have unstaged changes.\nPlease commit or stash them."
+
+    git checkout -q $ISSUE_BRANCH
+}
+
+git_issue_restore_branch()
+{
+    git checkout -q $OLD_REV
+}
+
 git_issue_help()
 {
     git issue -h
@@ -83,8 +97,6 @@ git_issue_help()
 
 git_issue_init()
 {
-    local old_rev=$(git rev-parse --abbrev-ref HEAD)
-
     git_local_branch_exists $ISSUE_BRANCH && die 'Git issue already initialized.'
     git_have_changes && die "Cannot initialized: You have unstaged changes.\nPlease commit or stash them."
 
@@ -92,25 +104,17 @@ git_issue_init()
     [ -n "$(git ls-files)" ] && git rm -qf $(git ls-files)
     git commit -q --allow-empty -m 'git issue init'
 
-    git checkout -q $old_rev
     info 'Git issue initialized.'
 }
 
 git_issue_new()
 {
-    local old_rev=$(git rev-parse --abbrev-ref HEAD)
-
-    git_local_branch_exists $ISSUE_BRANCH || die 'Git issue not initialized.'
-    git_have_changes && die "You have unstaged changes.\nPlease commit or stash them."
-
-    git checkout -q $ISSUE_BRANCH
-
     local id=$(expr $(git_issue_get_last_id) + 1)
+
     touch "$id"
     git add "$id"
     git commit -q -m "Create issue #${id}"
 
-    git checkout -q $old_rev
     info "Issue #${id} created."
 }
 
@@ -124,5 +128,9 @@ else
     shift $((OPTIND-1))
 
     function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
+
+    [ $cmd != 'help' -a $cmd != 'init' ] && git_issue_switch_branch
     git_issue_${cmd}
+    git_issue_restore_branch
+
 fi
