@@ -16,6 +16,7 @@ ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 QUIET=false
 
+# {{{ Shell common
 function_exists()
 {
     function=$1
@@ -38,7 +39,8 @@ die()
     warn "$@"
     exit 1
 }
-
+# }}}
+# {{{ Git common
 git_local_branch_exists()
 {
     local name=$1
@@ -65,7 +67,8 @@ git_issue_parse_args()
         esac
     done
 }
-
+# }}}
+# {{{ Git issue common
 git_issue_get_last_id()
 {
     local id=$(ls -1 | grep '[0-9]\+' | sort -n | tail -1)
@@ -89,7 +92,8 @@ git_issue_restore_branch()
 {
     git checkout -q $OLD_REV
 }
-
+# }}}
+# {{{ Commands
 git_issue_help()
 {
     git issue -h
@@ -117,6 +121,7 @@ git_issue_new()
 
     info "Issue #${id} created."
 }
+# }}}
 
 if [ $# -eq 0 ]
 then
