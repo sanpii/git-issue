@@ -5,7 +5,7 @@ LONG_USAGE='git issue help
     print long help message.
 git issue init
     initialize the issue tracker.
-git issue new
+git issue new [<title>] [<description>]
     create a new issue.
 git issue show <id>
     display issue #id.
@@ -119,9 +119,19 @@ git_issue_init()
 
 git_issue_new()
 {
+    local title="$1"
+    local description="$2"
     local id=$(expr $(git_issue_get_last_id) + 1)
 
-    touch "$id"
+    echo "title: ${title}
+status: new
+assign:
+tags:
+milestone:
+type:
+
+${description}" > "$id"
+
     git add "$id"
     git commit -q -m "Create issue #${id}"
 
@@ -173,5 +183,5 @@ else
     function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
 
     [ $cmd != 'help' -a $cmd != 'init' ] && git_issue_switch_branch
-    git_issue_${cmd} $*
+    git_issue_${cmd} "$@"
 fi
