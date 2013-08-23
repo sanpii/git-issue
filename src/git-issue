@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE='[help|init|new|show|edit]'
+USAGE='[help|init|new|show|edit|rm]'
 LONG_USAGE='git issue help
     print long help message.
 git issue init
@@ -10,7 +10,9 @@ git issue new
 git issue show <id>
     display issue #id.
 git issue edit <id>
-    edit issue #id.'
+    edit issue #id.
+git issue rm <id>
+    delete issue <id>.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -144,6 +146,16 @@ git_issue_edit()
     eval "$GIT_EDITOR '$id'"
 
     git_have_changes && git commit -q -m "Edit issue #${id}" "$id" && info "Issue #${id} saved."
+}
+
+git_issue_rm()
+{
+    local id="$1"
+
+    [ -f "$id" ] || die "Issue #${id} doesn't exist"
+    git rm -q "$id"
+    git commit -q -m "Delete issue #$id"
+    info "Issue #${id} deleted."
 }
 # }}}
 
