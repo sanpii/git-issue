@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE='[help|init|new|show|edit|rm]'
+USAGE='[help|init|new|show|edit|rm|ls]'
 LONG_USAGE='git issue help
     print long help message.
 git issue init
@@ -12,7 +12,9 @@ git issue show <id>
 git issue edit <id>
     edit issue #id.
 git issue rm <id>
-    delete issue <id>.'
+    delete issue <id>.
+git issue ls
+    show all issues.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -166,6 +168,16 @@ git_issue_rm()
     git rm -q "$id"
     git commit -q -m "Delete issue #$id"
     info "Issue #${id} deleted."
+}
+
+git_issue_ls()
+{
+    local issues="$(git ls-files)"
+
+    if [ -n "$issues" ]
+    then
+        grep '^title: .*' $issues | sed 's/title://'
+    fi
 }
 # }}}
 
