@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE='[help|init|new|show]'
+USAGE='[help|init|new|show|edit]'
 LONG_USAGE='git issue help
     print long help message.
 git issue init
@@ -8,7 +8,9 @@ git issue init
 git issue new
     create a new issue.
 git issue show <id>
-    display issue #id.'
+    display issue #id.
+git issue edit <id>
+    edit issue #id.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -130,6 +132,18 @@ git_issue_show()
 
     [ -f "$id" ] || die "Issue #${id} doesn't exist"
     cat $id
+}
+
+git_issue_edit()
+{
+    local id="$1"
+
+    [ -f "$id" ] || die "Issue #${id} doesn't exist"
+
+    GIT_EDITOR=$(git var GIT_EDITOR)
+    eval "$GIT_EDITOR '$id'"
+
+    git_have_changes && git commit -q -m "Edit issue #${id}" "$id" && info "Issue #${id} saved."
 }
 # }}}
 
