@@ -1,12 +1,14 @@
 #!/bin/sh
 
-USAGE='[help|init|new]'
+USAGE='[help|init|new|show]'
 LONG_USAGE='git issue help
     print long help message.
 git issue init
     initialize the issue tracker.
 git issue new
-    create a new issue.'
+    create a new issue.
+git issue show <id>
+    display issue #id.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -121,7 +123,17 @@ git_issue_new()
 
     info "Issue #${id} created."
 }
+
+git_issue_show()
+{
+    local id="$1"
+
+    [ -f "$id" ] || die "Issue #${id} doesn't exist"
+    cat $id
+}
 # }}}
+
+trap 'git_issue_restore_branch' EXIT
 
 if [ $# -eq 0 ]
 then
@@ -135,7 +147,5 @@ else
     function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
 
     [ $cmd != 'help' -a $cmd != 'init' ] && git_issue_switch_branch
-    git_issue_${cmd}
-    git_issue_restore_branch
-
+    git_issue_${cmd} $*
 fi
