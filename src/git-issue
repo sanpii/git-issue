@@ -11,6 +11,8 @@ OPTIONS_SPEC=
 
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
+QUIET=false
+
 function_exists()
 {
     function=$1
@@ -18,9 +20,14 @@ function_exists()
     type $function > /dev/null 2>&1
 }
 
+info()
+{
+    $QUIET || echo "$@"
+}
+
 warn()
 {
-    echo "$@" >&2;
+    $QUIET || echo "$@" >&2;
 }
 
 die()
@@ -41,6 +48,21 @@ git_have_changes()
     test -n "$(git status --porcelain)"
 }
 
+git_issue_parse_args()
+{
+    while getopts ":q" opt
+    do
+        case $opt in
+            q)
+                QUIET=true
+            ;;
+            \?)
+                die "Invalid option: -$OPTARG"
+            ;;
+        esac
+    done
+}
+
 git_issue_help()
 {
     git issue -h
@@ -57,7 +79,7 @@ git_issue_init()
     [ -n "$(git ls-files)" ] && git rm -qf $(git ls-files)
     git commit -q --allow-empty -m 'git issue init'
     git checkout -q $old_rev
-    echo 'Git issue initialized.'
+    info 'Git issue initialized.'
 }
 
 if [ $# -eq 0 ]
@@ -66,6 +88,8 @@ then
 else
     cmd="$1"
     shift
+    git_issue_parse_args $*
+    shift $((OPTIND-1))
 
     function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
     git_issue_${cmd}

@@ -42,4 +42,15 @@ testInitTwice()
     assertEquals 'status code' $status 1
 }
 
+testInitQuiet()
+{
+    local output
+
+    output="$(git issue init -q 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" ''
+    assertEquals 'status code' $status 0
+}
+
 . $CWD/../shunit2/shunit2
