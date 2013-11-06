@@ -26,6 +26,19 @@ testLs()
     assertEquals 'status code' $status 0
 }
 
+testLsNoIssue()
+{
+    local output
+
+    git issue init -q
+
+    output="$(git issue ls 1 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" 'Nothing to do :)'
+    assertEquals 'status code' $status 0
+}
+
 CWD="$(cd "$(dirname "$0")" && pwd)"
 
 . $CWD/common.sh
