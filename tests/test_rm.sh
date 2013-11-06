@@ -1,41 +1,37 @@
 #!/bin/sh
 
-setUp()
-{
-    createTestRepository
+setUp () {
+	createTestRepository
 }
 
-tearDown()
-{
-    deleteTestRepository
+tearDown () {
+	deleteTestRepository
 }
 
-testRm()
-{
-    local output
+testRm () {
+	local output
 
-    git issue init -q
-    git issue new -q
+	git issue init -q
+	git issue new -q
 
-    output="$(git issue rm 1 2>&1)"
-    local status=$?
+	output="$(git issue rm 1 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" 'Issue #1 deleted.'
-    assertEquals 'output' "$(git issue show 1 2>&1)" "Issue #1 doesn't exist"
-    assertEquals 'status code' $status 0
+	assertEquals 'output' "$output" 'Issue #1 deleted.'
+	assertEquals 'output' "$(git issue show 1 2>&1)" "Issue #1 doesn't exist"
+	assertEquals 'status code' $status 0
 }
 
-testRmUnknowId()
-{
-    local output
+testRmUnknowId () {
+	local output
 
-    git issue init -q
+	git issue init -q
 
-    output="$(git issue rm 1 2>&1)"
-    local status=$?
+	output="$(git issue rm 1 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" "Issue #1 doesn't exist"
-    assertEquals 'status code' $status 1
+	assertEquals 'output' "$output" "Issue #1 doesn't exist"
+	assertEquals 'status code' $status 1
 }
 
 CWD="$(cd "$(dirname "$0")" && pwd)"

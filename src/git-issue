@@ -2,19 +2,19 @@
 
 USAGE='[help|init|new|show|edit|rm|ls]'
 LONG_USAGE='git issue help
-    print long help message.
+	print long help message.
 git issue init
-    initialize the issue tracker.
+	initialize the issue tracker.
 git issue new [<title>] [<description>]
-    create a new issue.
+	create a new issue.
 git issue show <id>
-    display issue #id.
+	display issue #id.
 git issue edit <id>
-    edit issue #id.
+	edit issue #id.
 git issue rm <id>
-    delete issue <id>.
+	delete issue <id>.
 git issue ls
-    show all issues.'
+	show all issues.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -25,177 +25,160 @@ ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 QUIET=false
 
 # {{{ Shell common
-function_exists()
-{
-    function=$1
+function_exists () {
+	function=$1
 
-    type $function > /dev/null 2>&1
+	type $function >/dev/null 2>&1
 }
 
-info()
-{
-    $QUIET || echo "$@"
+info () {
+	$QUIET || echo "$@"
 }
 
-warn()
-{
-    $QUIET || echo "$@" >&2;
+warn () {
+	$QUIET || echo "$@" >&2;
 }
 
-die()
-{
-    warn "$@"
-    exit 1
+die () {
+	warn "$@"
+	exit 1
 }
 # }}}
 # {{{ Git common
-git_local_branch_exists()
-{
-    local name=$1
+git_local_branch_exists () {
+	local name=$1
 
-    git branch --no-color | grep -q "$name"
+	git branch --no-color | grep -q "$name"
 }
 
-git_have_changes()
-{
-    test -n "$(git status --porcelain)"
+git_have_changes () {
+	test -n "$(git status --porcelain)"
 }
 
-git_issue_parse_args()
-{
-    while getopts ":q" opt
-    do
-        case $opt in
-            q)
-                QUIET=true
-            ;;
-            \?)
-                die "Invalid option: -$OPTARG"
-            ;;
-        esac
-    done
+git_issue_parse_args () {
+	while getopts ":q" opt
+	do
+		case $opt in
+			q)
+				QUIET=true
+			;;
+			\?)
+				die "Invalid option: -$OPTARG"
+			;;
+		esac
+	done
 }
 # }}}
 # {{{ Git issue common
-git_issue_get_last_id()
-{
-    local id=$(ls -1 | grep '[0-9]\+' | sort -n | tail -1)
+git_issue_get_last_id () {
+	local id=$(ls -1 | grep '[0-9]\+' | sort -n | tail -1)
 
-    if [ -z $id ]
-    then
-        id=0
-    fi
-    echo $id
+	if test -z $id
+	then
+		id=0
+	fi
+	echo $id
 }
 
-git_issue_switch_branch()
-{
-    git_local_branch_exists $ISSUE_BRANCH || die 'Git issue not initialized.'
-    git_have_changes && die "You have unstaged changes.\nPlease commit or stash them."
+git_issue_switch_branch () {
+	git_local_branch_exists $ISSUE_BRANCH || die 'Git issue not initialized.'
+	git_have_changes && die "You have unstaged changes.\nPlease commit or stash them."
 
-    git checkout -q $ISSUE_BRANCH
+	git checkout -q $ISSUE_BRANCH
 }
 
-git_issue_restore_branch()
-{
-    git checkout -q $OLD_REV
+git_issue_restore_branch () {
+	git checkout -q $OLD_REV
 }
 # }}}
 # {{{ Commands
-git_issue_help()
-{
-    git issue -h
+git_issue_help () {
+	git issue -h
 }
 
-git_issue_init()
-{
-    git_local_branch_exists $ISSUE_BRANCH && die 'Git issue already initialized.'
-    git_have_changes && die "Cannot initialized: You have unstaged changes.\nPlease commit or stash them."
+git_issue_init () {
+	git_local_branch_exists $ISSUE_BRANCH && die 'Git issue already initialized.'
+	git_have_changes && die "Cannot initialized: You have unstaged changes.\nPlease commit or stash them."
 
-    git checkout -q --orphan $ISSUE_BRANCH
-    [ -n "$(git ls-files)" ] && git rm -qf $(git ls-files)
-    git commit -q --allow-empty -m 'git issue init'
+	git checkout -q --orphan $ISSUE_BRANCH
+	test -n "$(git ls-files)" && git rm -qf $(git ls-files)
+	git commit -q --allow-empty -m 'git issue init'
 
-    info 'Git issue initialized.'
+	info 'Git issue initialized.'
 }
 
-git_issue_new()
-{
-    local title="$1"
-    local description="$2"
-    local id=$(expr $(git_issue_get_last_id) + 1)
+git_issue_new () {
+	local title="$1"
+	local description="$2"
+	local id=$(expr $(git_issue_get_last_id) + 1)
 
-    echo "title: ${title}
+	echo "title: ${title}
 status: new
 assign:
 tags:
 milestone:
 type:
 
-${description}" > "$id"
+${description}" >"$id"
 
-    git add "$id"
-    git commit -q -m "Create issue #${id}"
+	git add "$id"
+	git commit -q -m "Create issue #${id}"
 
-    info "Issue #${id} created."
+	info "Issue #${id} created."
 }
 
-git_issue_show()
-{
-    local id="$1"
+git_issue_show () {
+	local id="$1"
 
-    [ -f "$id" ] || die "Issue #${id} doesn't exist"
-    cat $id
+	test -f "$id" || die "Issue #${id} doesn't exist"
+	cat $id
 }
 
-git_issue_edit()
-{
-    local id="$1"
+git_issue_edit () {
+	local id="$1"
 
-    [ -f "$id" ] || die "Issue #${id} doesn't exist"
+	test -f "$id" || die "Issue #${id} doesn't exist"
 
-    GIT_EDITOR=$(git var GIT_EDITOR)
-    eval "$GIT_EDITOR '$id'"
+	GIT_EDITOR=$(git var GIT_EDITOR)
+	eval "$GIT_EDITOR '$id'"
 
-    git_have_changes && git commit -q -m "Edit issue #${id}" "$id" && info "Issue #${id} saved."
+	git_have_changes && git commit -q -m "Edit issue #${id}" "$id" && info "Issue #${id} saved."
 }
 
-git_issue_rm()
-{
-    local id="$1"
+git_issue_rm () {
+	local id="$1"
 
-    [ -f "$id" ] || die "Issue #${id} doesn't exist"
-    git rm -q "$id"
-    git commit -q -m "Delete issue #$id"
-    info "Issue #${id} deleted."
+	test -f "$id" || die "Issue #${id} doesn't exist"
+	git rm -q "$id"
+	git commit -q -m "Delete issue #$id"
+	info "Issue #${id} deleted."
 }
 
-git_issue_ls()
-{
-    local issues="$(git ls-files)"
+git_issue_ls () {
+	local issues="$(git ls-files)"
 
-    if [ -n "$issues" ]
-    then
-        grep '^title: .*' $issues | sed 's/title://'
-    else
-        echo 'Nothing to do :)'
-    fi
+	if test -n "$issues"
+	then
+		grep '^title: .*' $issues | sed 's/title://'
+	else
+		echo 'Nothing to do :)'
+	fi
 }
 # }}}
 
 trap 'git_issue_restore_branch' EXIT
 
-if [ $# -eq 0 ]
+if test $# -eq 0
 then
-    usage
+	usage
 else
-    cmd="$1"
-    shift
-    git_issue_parse_args $*
-    shift $((OPTIND-1))
+	cmd="$1"
+	shift
+	git_issue_parse_args $*
+	shift $(( OPTIND-1 ))
 
-    function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
+	function_exists "git_issue_${cmd}" || die "git issue $cmd doesn't exist"
 
-    [ $cmd != 'help' -a $cmd != 'init' ] && git_issue_switch_branch
-    git_issue_${cmd} "$@"
+	test $cmd != 'help' -a $cmd != 'init' && git_issue_switch_branch
+	git_issue_${cmd} "$@"
 fi

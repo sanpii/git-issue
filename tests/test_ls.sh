@@ -1,42 +1,38 @@
 #!/bin/sh
 
-setUp()
-{
-    createTestRepository
+setUp () {
+	createTestRepository
 }
 
-tearDown()
-{
-    deleteTestRepository
+tearDown () {
+	deleteTestRepository
 }
 
-testLs()
-{
-    local output
+testLs () {
+	local output
 
-    git issue init -q
-    git issue new -q 'test 1'
-    git issue new -q 'test 2'
+	git issue init -q
+	git issue new -q 'test 1'
+	git issue new -q 'test 2'
 
-    output="$(git issue ls 1 2>&1)"
-    local status=$?
+	output="$(git issue ls 1 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" '1: test 1
+	assertEquals 'output' "$output" '1: test 1
 2: test 2'
-    assertEquals 'status code' $status 0
+	assertEquals 'status code' $status 0
 }
 
-testLsNoIssue()
-{
-    local output
+testLsNoIssue () {
+	local output
 
-    git issue init -q
+	git issue init -q
 
-    output="$(git issue ls 1 2>&1)"
-    local status=$?
+	output="$(git issue ls 1 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" 'Nothing to do :)'
-    assertEquals 'status code' $status 0
+	assertEquals 'output' "$output" 'Nothing to do :)'
+	assertEquals 'status code' $status 0
 }
 
 CWD="$(cd "$(dirname "$0")" && pwd)"

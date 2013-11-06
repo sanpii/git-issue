@@ -1,48 +1,43 @@
 #!/bin/sh
 
-setUp()
-{
-    createTestRepository
+setUp () {
+	createTestRepository
 }
 
-tearDown()
-{
-    deleteTestRepository
+tearDown () {
+	deleteTestRepository
 }
 
-testInit()
-{
-    local output
+testInit () {
+	local output
 
-    output="$(git issue init 2>&1)"
-    local status=$?
+	output="$(git issue init 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" 'Git issue initialized.'
-    assertEquals 'status code' $status 0
+	assertEquals 'output' "$output" 'Git issue initialized.'
+	assertEquals 'status code' $status 0
 }
 
-testInitTwice()
-{
-    local output
+testInitTwice () {
+	local output
 
-    testInit
+	testInit
 
-    output="$(git issue init 2>&1)"
-    local status=$?
+	output="$(git issue init 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" 'Git issue already initialized.'
-    assertEquals 'status code' $status 1
+	assertEquals 'output' "$output" 'Git issue already initialized.'
+	assertEquals 'status code' $status 1
 }
 
-testInitQuiet()
-{
-    local output
+testInitQuiet () {
+	local output
 
-    output="$(git issue init -q 2>&1)"
-    local status=$?
+	output="$(git issue init -q 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" ''
-    assertEquals 'status code' $status 0
+	assertEquals 'output' "$output" ''
+	assertEquals 'status code' $status 0
 }
 
 CWD="$(cd "$(dirname "$0")" && pwd)"

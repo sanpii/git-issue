@@ -1,42 +1,38 @@
 #!/bin/sh
 
-setUp()
-{
-    createTestRepository
-    export GIT_EDITOR='echo [test] >'
+setUp () {
+	createTestRepository
+	export GIT_EDITOR='echo [test] >'
 }
 
-tearDown()
-{
-    deleteTestRepository
+tearDown () {
+	deleteTestRepository
 }
 
-testEdit()
-{
-    local output
+testEdit () {
+	local output
 
-    git issue init -q
-    git issue new -q
+	git issue init -q
+	git issue new -q
 
-    output="$(git issue edit 1 2>&1)"
-    local status=$?
+	output="$(git issue edit 1 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$(git issue show 1)" '[test]'
-    assertEquals 'status code' $status 0
+	assertEquals 'output' "$(git issue show 1)" '[test]'
+	assertEquals 'status code' $status 0
 }
 
-testEditUnknowId()
-{
-    local output
+testEditUnknowId () {
+	local output
 
-    git issue init -q
-    git issue new -q
+	git issue init -q
+	git issue new -q
 
-    output="$(git issue edit 2 2>&1)"
-    local status=$?
+	output="$(git issue edit 2 2>&1)"
+	local status=$?
 
-    assertEquals 'output' "$output" "Issue #2 doesn't exist"
-    assertEquals 'status code' $status 1
+	assertEquals 'output' "$output" "Issue #2 doesn't exist"
+	assertEquals 'status code' $status 1
 }
 
 CWD="$(cd "$(dirname "$0")" && pwd)"

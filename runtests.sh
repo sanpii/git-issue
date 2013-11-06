@@ -5,5 +5,5 @@ PATH="$CWD/src":$PATH
 
 for t in $CWD/tests/test_*.sh
 do
-    $t
+	$t
 done
