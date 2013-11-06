@@ -22,6 +22,54 @@ testNew()
     assertEquals 'status code' $status 0
 }
 
+testNewWithTitle()
+{
+    local output
+
+    git issue init -q
+    output="$(git issue new 'Issue title' 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" 'Issue #1 created.'
+    assertEquals 'status code' $status 0
+
+    output="$(git issue show 1 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" 'title: Issue title
+status: new
+assign:
+tags:
+milestone:
+type:'
+    assertEquals 'status code' $status 0
+}
+
+testNewWithDescription()
+{
+    local output
+
+    git issue init -q
+    output="$(git issue new 'Issue title' 'Issue description' 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" 'Issue #1 created.'
+    assertEquals 'status code' $status 0
+
+    output="$(git issue show 1 2>&1)"
+    local status=$?
+
+    assertEquals 'output' "$output" 'title: Issue title
+status: new
+assign:
+tags:
+milestone:
+type:
+
+Issue description'
+    assertEquals 'status code' $status 0
+}
+
 testNewUnitialized()
 {
     local output
