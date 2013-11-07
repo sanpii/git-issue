@@ -80,10 +80,12 @@ testNewUnstash () {
 
 	git issue init -q
 	touch test
+	git add test
+
 	output="$(git issue new 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" "You have unstaged changes.\nPlease commit or stash them."
+	assertEquals 'output' "$output" "Cannot switch to issues branch: Your index contains uncommitted changes."
 	assertEquals 'status code' $status 1
 }
 

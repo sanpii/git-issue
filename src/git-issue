@@ -71,7 +71,7 @@ git_issue_get_last_id () {
 }
 
 git_require_clean_work_tree () {
-	git_have_changes && die $(gettextln "You have unstaged changes.\nPlease commit or stash them.")
+	require_clean_work_tree "$(gettextln 'switch to issues branch')"
 }
 
 git_issue_switch_branch () {
