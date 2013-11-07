@@ -83,8 +83,7 @@ testNewUnstash () {
 	output="$(git issue new 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'You have unstaged changes.
-Please commit or stash them.'
+	assertEquals 'output' "$output" "You have unstaged changes.\nPlease commit or stash them."
 	assertEquals 'status code' $status 1
 }
 

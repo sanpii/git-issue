@@ -23,26 +23,13 @@ OPTIONS_SPEC=
 OLD_REV=$(git rev-parse --abbrev-ref HEAD)
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
-QUIET=false
+GIT_QUIET=
 
 # {{{ Shell common
 function_exists () {
 	function=$1
 
 	type $function >/dev/null 2>&1
-}
-
-info () {
-	$QUIET || echo "$@"
-}
-
-warn () {
-	$QUIET || echo "$@" >&2;
-}
-
-die () {
-	warn "$@"
-	exit 1
 }
 # }}}
 # {{{ Git common
@@ -61,7 +48,7 @@ git_issue_parse_args () {
 	do
 		case $opt in
 			q)
-				QUIET=true
+				GIT_QUIET=1
 			;;
 			\?)
 				die $(eval_gettextln "Invalid option: -$OPTARG")
@@ -105,7 +92,7 @@ git_issue_init () {
 	test -n "$(git ls-files)" && git rm -qf $(git ls-files)
 	git commit -q --allow-empty -m "$(gettextln 'git issue init')"
 
-	info $(gettextln 'Git issue initialized.')
+	say $(gettextln 'Git issue initialized.')
 }
 
 git_issue_new () {
@@ -125,14 +112,14 @@ ${description}" >"$id"
 	git add "$id"
 	git commit -q -m "$(eval_gettextln "Create issue #${id}")"
 
-	info $(eval_gettextln "Issue #${id} created.")
+	say $(eval_gettextln "Issue #${id} created.")
 }
 
 git_issue_show () {
 	local id="$1"
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
-	cat $id
+	git_pager $id
 }
 
 git_issue_edit () {
@@ -140,10 +127,9 @@ git_issue_edit () {
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
-	GIT_EDITOR=$(git var GIT_EDITOR)
-	eval "$GIT_EDITOR '$id'"
+	git_editor "$id"
 
-	git_have_changes && git commit -q -m "$(eval_gettextln "Edit issue #${id}")" "$id" && info $(eval_gettextln "Issue #${id} saved.")
+	git_have_changes && git commit -q -m "$(eval_gettextln "Edit issue #${id}")" "$id" && say $(eval_gettextln "Issue #${id} saved.")
 }
 
 git_issue_rm () {
@@ -152,7 +138,7 @@ git_issue_rm () {
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 	git rm -q "$id"
 	git commit -q -m "Delete issue #$id"
-	info $(eval_gettextln "Issue #${id} deleted.")
+	say $(eval_gettextln "Issue #${id} deleted.")
 }
 
 git_issue_ls () {
