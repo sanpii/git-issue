@@ -8,14 +8,25 @@ tearDown () {
 	deleteTestRepository
 }
 
-testLs () {
+testLsOneIssue () {
 	local output
 
 	git issue init -q
 	git issue new -q 'test 1'
+
+	output="$(git issue ls 2>&1)"
+	local status=$?
+
+	assertEquals 'output' "$output" '1: test 1'
+	assertEquals 'status code' $status 0
+}
+
+testLs () {
+	testLsOneIssue
+
 	git issue new -q 'test 2'
 
-	output="$(git issue ls 1 2>&1)"
+	output="$(git issue ls 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" '1: test 1
@@ -28,7 +39,7 @@ testLsNoIssue () {
 
 	git issue init -q
 
-	output="$(git issue ls 1 2>&1)"
+	output="$(git issue ls 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" 'Nothing to do :)'

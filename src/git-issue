@@ -150,7 +150,7 @@ git_issue_ls () {
 
 	if test -n "$issues"
 	then
-		grep '^title: .*' $issues | sed 's/title://'
+		grep -H '^title: .*' $issues | sed 's/title://'
 	else
 		echo $(gettextln 'Nothing to do :)')
 	fi
