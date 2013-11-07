@@ -68,9 +68,13 @@ git_issue_get_last_id () {
 	echo $id
 }
 
+git_require_clean_work_tree () {
+	git_have_changes && die $(gettextln "You have unstaged changes.\nPlease commit or stash them.")
+}
+
 git_issue_switch_branch () {
 	git_local_branch_exists $ISSUE_BRANCH || die $(eval_gettextln 'Git issue not initialized.')
-	git_have_changes && die $(gettextln "You have unstaged changes.\nPlease commit or stash them.")
+	git_require_clean_work_tree
 
 	git checkout -q $ISSUE_BRANCH
 }
@@ -86,7 +90,7 @@ git_issue_help () {
 
 git_issue_init () {
 	git_local_branch_exists $ISSUE_BRANCH && die $(gettextln 'Git issue already initialized.')
-	git_have_changes && die $(gettextln "Cannot initialized: You have unstaged changes.\nPlease commit or stash them.")
+	git_require_clean_work_tree
 
 	git checkout -q --orphan $ISSUE_BRANCH
 	test -n "$(git ls-files)" && git rm -qf $(git ls-files)
