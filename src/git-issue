@@ -161,7 +161,30 @@ git_issue_ls () {
 git_issue_sync () {
 	local remote=$(git config --get issue.remote || echo 'origin')
 
-	git push -q -u $remote $ISSUE_BRANCH >/dev/null && say $(gettextln 'Issues synced.')
+	git fetch -q $remote
+	if git branch --remote | grep -q "$remote/$ISSUE_BRANCH"
+	then
+		if git_local_branch_exists $ISSUE_BRANCH
+		then
+			git_issue_switch_branch
+			git rebase -q $remote/$ISSUE_BRANCH
+		else
+			git checkout -q -b $ISSUE_BRANCH "$remote/$ISSUE_BRANCH"
+		fi
+	fi
+
+	if git_local_branch_exists $ISSUE_BRANCH
+	then
+		git_issue_switch_branch
+		git push -q -u $remote $ISSUE_BRANCH >/dev/null
+	fi
+
+	if git_local_branch_exists $ISSUE_BRANCH
+	then
+		say $(gettextln 'Issues synced.')
+	else
+		say $(gettextln 'Nothing to sync.')
+	fi
 }
 # }}}
 
@@ -178,6 +201,6 @@ else
 
 	function_exists "git_issue_${cmd}" || die $(eval_gettextln "git issue $cmd doesn't exist")
 
-	test $cmd != 'help' -a $cmd != 'init' && git_issue_switch_branch
+	test $cmd != 'help' -a $cmd != 'init' -a $cmd != 'sync' && git_issue_switch_branch
 	git_issue_${cmd} "$@"
 fi
