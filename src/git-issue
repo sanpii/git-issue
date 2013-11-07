@@ -1,6 +1,6 @@
 #!/bin/sh
 
-USAGE='[help|init|new|show|edit|rm|ls]'
+USAGE='[help|init|new|show|edit|rm|ls|publish]'
 LONG_USAGE='git issue help
 	print long help message.
 git issue init
@@ -14,7 +14,9 @@ git issue edit <id>
 git issue rm <id>
 	delete issue <id>.
 git issue ls
-	show all issues.'
+	show all issues.
+git issue publish
+	publish issues to remote repository.'
 
 OPTIONS_SPEC=
 . git-sh-setup
@@ -154,6 +156,12 @@ git_issue_ls () {
 	else
 		echo $(gettextln 'Nothing to do :)')
 	fi
+}
+
+git_issue_publish () {
+	local remote=$(git config --get issue.remote || echo 'origin')
+
+	git push -q -u $remote $ISSUE_BRANCH >/dev/null && say $(gettextln 'Issues published.')
 }
 # }}}
 

@@ -24,6 +24,10 @@ options.
 
 The branch name used for store the issues. *issues* by default.
 
+### issue.remote
+
+Remote name to publish issues. *origin* by default.
+
 ## Commands
 
 ### Initialize your issue database
@@ -62,6 +66,11 @@ issue is automatically committed.
 ### Delete an issue
 
     $ git issue rm 1
+
+### Publish issues
+
+    $ git issue publish
+    Issues published.
 
 ## A bug?
 
