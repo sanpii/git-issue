@@ -67,10 +67,12 @@ issue is automatically committed.
 
     $ git issue rm 1
 
-### Publish issues
+### Synchonize issues
 
-    $ git issue publish
-    Issues published.
+Bidirectionnal synchronize:
+
+    $ git issue sync
+    Issues synced.
 
 ## A bug?
 

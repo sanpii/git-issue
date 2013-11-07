@@ -13,16 +13,16 @@ tearDown () {
 	deleteTestRepository
 }
 
-testPublish () {
+testSync () {
 	local output
 
 	git issue init -q
 	git issue new -q 'test 1'
 
-	output="$(git issue publish 2>&1)"
+	output="$(git issue sync 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Issues published.'
+	assertEquals 'output' "$output" 'Issues synced.'
 	assertEquals 'status code' $status 0
 
 	cd "$REPO"
