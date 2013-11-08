@@ -67,6 +67,12 @@ Or you can rapidly edit issue headers:
 
     $ git issue edit --status=done 1
 
+## Close an issue
+
+And you can more rapidly close an issue:
+
+    $ git issue close 1
+
 ### Delete an issue
 
     $ git issue rm 1

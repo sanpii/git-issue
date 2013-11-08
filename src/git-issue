@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USAGE='[help|init|new|show|edit|rm|ls|sync]'
+USAGE='[help|init|new|show|edit|rm|ls|sync|close]'
 LONG_USAGE='git issue help
 	print long help message.
 git issue init
@@ -16,7 +16,9 @@ git issue rm <id>
 git issue ls
 	show all issues.
 git issue sync
-	sync issues with remote repository.'
+	sync issues with remote repository.
+git issue close <id>
+	close issue #id.'
 
 . git-sh-setup
 . git-sh-i18n
@@ -226,6 +228,11 @@ git_issue_sync () {
 	else
 		say $(gettextln 'Nothing to sync.')
 	fi
+}
+
+git_issue_close () {
+	status='close'
+	git_issue_edit "$@"
 }
 # }}}
 
