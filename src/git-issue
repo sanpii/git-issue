@@ -45,16 +45,37 @@ git_have_changes () {
 }
 
 git_issue_parse_args () {
-	while getopts ":q" opt
+	local shortOptions='q'
+	local longOptions='quiet'
+
+	COMMAND="$1"
+	shift
+
+	OPTS=$( getopt -o $shortOptions -l $longOptions -n 'git-issue' -- "$@" )
+	if test $? -ne 0
+	then
+		usage
+		exit 1
+	fi
+
+	eval set -- "$OPTS"
+	while true
 	do
-		case $opt in
-			q)
+		case $1 in
+			-q|--quiet)
 				GIT_QUIET=1
+				shift
 			;;
-			\?)
-				die $(eval_gettextln "Invalid option: -$OPTARG")
+			--)
+				shift
+				break
 			;;
 		esac
+	done
+
+	for arg
+	do
+		REMAINING_ARG="$REMAINING_ARG '$arg'"
 	done
 }
 # }}}
@@ -193,13 +214,10 @@ if test $# -eq 0
 then
 	usage
 else
-	cmd="$1"
-	shift
-	git_issue_parse_args $*
-	shift $(( OPTIND-1 ))
+	git_issue_parse_args "$@"
 
-	function_exists "git_issue_${cmd}" || die $(eval_gettextln "git issue $cmd doesn't exist")
+	function_exists "git_issue_${COMMAND}" || die $(eval_gettextln "git issue $COMMAND doesn't exist")
 
-	test $cmd != 'help' -a $cmd != 'init' -a $cmd != 'sync' && git_issue_switch_branch
-	git_issue_${cmd} "$@"
+	test $COMMAND != 'help' -a $COMMAND != 'init' -a $COMMAND != 'sync' && git_issue_switch_branch
+	eval git_issue_${COMMAND} $REMAINING_ARG
 fi
