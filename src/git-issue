@@ -18,7 +18,6 @@ git issue ls
 git issue sync
 	sync issues with remote repository.'
 
-OPTIONS_SPEC=
 . git-sh-setup
 . git-sh-i18n
 
