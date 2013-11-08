@@ -63,6 +63,10 @@ This is the required first step:
 Git issue open the issue with your preferred editor. Edit, save and quit. The
 issue is automatically committed.
 
+Or you can rapidly edit issue headers:
+
+    $ git issue edit --status=done 1
+
 ### Delete an issue
 
     $ git issue rm 1

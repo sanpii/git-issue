@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 USAGE='[help|init|new|show|edit|rm|ls|sync]'
 LONG_USAGE='git issue help
@@ -51,6 +51,12 @@ git_issue_parse_args () {
 	COMMAND="$1"
 	shift
 
+	case $COMMAND in
+		edit)
+			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
+		;;
+	esac
+
 	OPTS=$( getopt -o $shortOptions -l $longOptions -n 'git-issue' -- "$@" )
 	if test $? -ne 0
 	then
@@ -65,6 +71,10 @@ git_issue_parse_args () {
 			-q|--quiet)
 				GIT_QUIET=1
 				shift
+			;;
+			--?*)
+				eval "$(echo $1 | sed 's/^--//')='$2'"
+				shift 2
 			;;
 			--)
 				shift
@@ -153,7 +163,18 @@ git_issue_edit () {
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
-	git_editor "$id"
+	edited=false
+	for name in status title tags milestone type
+	do
+		if test -v $name
+		then
+			value=$(eval echo \$$name)
+			sed -i "s/^$name:.*/$name: $value/" "$id"
+			edited=true
+		fi
+	done
+
+	$edited || git_editor "$id"
 
 	git_have_changes && git commit -q -m "$(eval_gettextln "Edit issue #${id}")" "$id" && say $(eval_gettextln "Issue #${id} saved.")
 }
