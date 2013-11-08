@@ -16,7 +16,7 @@ git issue rm <id>
 git issue ls
 	show all issues.
 git issue sync
-	sync issues to remote repository.'
+	sync issues with remote repository.'
 
 OPTIONS_SPEC=
 . git-sh-setup
