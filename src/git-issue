@@ -169,7 +169,7 @@ git_issue_sync () {
 			git_issue_switch_branch
 			git rebase -q $remote/$ISSUE_BRANCH
 		else
-			git checkout -q -b $ISSUE_BRANCH "$remote/$ISSUE_BRANCH"
+			git checkout -q -b $ISSUE_BRANCH "$remote/$ISSUE_BRANCH" >/dev/null
 		fi
 	fi
 
