@@ -147,6 +147,8 @@ type:
 
 ${description}" >"$id"
 
+	test -z $description && git_editor "$id"
+
 	git add "$id"
 	git commit -q -m "$(eval_gettextln "Create issue #${id}")"
 
