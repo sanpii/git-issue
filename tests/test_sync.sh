@@ -17,7 +17,7 @@ testSyncPush () {
 	local output
 
 	git issue init -q
-	git issue new -q 'test 1'
+	git issue new -q --no-edit 'test 1'
 
 	output="$(git issue sync 2>&1)"
 	local status=$?
@@ -37,7 +37,7 @@ testSyncPull () {
 
 	cd "$REPO"
 	git issue init -q
-	git issue new -q 'test 1'
+	git issue new -q --no-edit 'test 1'
 
 	cd "$REPO-clone"
 	output="$(git issue sync 2>&1)"
@@ -67,11 +67,11 @@ testSyncConflict () {
 
 	cd "$REPO"
 	git issue init -q
-	git issue new -q 'test 1' 'Issue in the first repo'
+	git issue new -q --no-edit 'test 1' 'Issue in the first repo'
 
 	cd "$REPO-clone"
 	git issue init -q
-	git issue new -q 'test 1' 'Issue in the second repo'
+	git issue new -q --no-edit 'test 1' 'Issue in the second repo'
 
 	output="$(git issue sync 2>&1)"
 	local status=$?

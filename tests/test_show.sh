@@ -12,7 +12,7 @@ testShow () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	git checkout -q issues
 	echo 'test' > 1
@@ -29,7 +29,7 @@ testShowUnknowId () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	output="$(git issue show 2 2>&1)"
 	local status=$?

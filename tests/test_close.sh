@@ -12,7 +12,7 @@ testClose () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	output="$(git issue close 1 2>&1)"
 	local status=$?

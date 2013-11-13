@@ -5,7 +5,7 @@ LONG_USAGE='git issue help
 	print long help message.
 git issue init
 	initialize the issue tracker.
-git issue new [<title>] [<description>]
+git issue new [--no-edit] [<title>] [<description>]
 	create a new issue.
 git issue show <id>
 	display issue #id.
@@ -54,6 +54,9 @@ git_issue_parse_args () {
 	shift
 
 	case $COMMAND in
+		new)
+			longOptions="$longOptions,no-edit"
+		;;
 		edit)
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
 		;;
@@ -156,7 +159,7 @@ type:
 
 ${description}" >"$id"
 
-	test -z $description && git_editor "$id"
+	test "$no_edit" != true -a -z "$description" && git_editor "$id"
 
 	git add "$id"
 	git commit -q -m "$(eval_gettextln "Create issue #${id}")"

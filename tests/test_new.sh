@@ -2,6 +2,7 @@
 
 setUp () {
 	createTestRepository
+	export GIT_EDITOR='echo [test] >'
 }
 
 tearDown () {
@@ -12,10 +13,27 @@ testNew () {
 	local output
 
 	git issue init -q
+	output="$(git issue new --no-edit 2>&1)"
+	local status=$?
+
+	assertEquals 'output' "$output" 'Issue #1 created.'
+	assertEquals 'status code' $status 0
+}
+
+testNewEdit () {
+	local output
+
+	git issue init -q
 	output="$(git issue new 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" 'Issue #1 created.'
+	assertEquals 'status code' $status 0
+
+	output="$(git issue show 1 2>&1)"
+	local status=$?
+
+	assertEquals 'output' "$output" '[test]'
 	assertEquals 'status code' $status 0
 }
 
@@ -23,7 +41,7 @@ testNewWithTitle () {
 	local output
 
 	git issue init -q
-	output="$(git issue new 'Issue title' 2>&1)"
+	output="$(git issue new --no-edit 'Issue title' 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" 'Issue #1 created.'
@@ -68,7 +86,7 @@ Issue description'
 testNewUnitialized () {
 	local output
 
-	output="$(git issue new 2>&1)"
+	output="$(git issue new --no-edit 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" 'Git issue not initialized.'
@@ -82,7 +100,7 @@ testNewUnstash () {
 	touch test
 	git add test
 
-	output="$(git issue new 2>&1)"
+	output="$(git issue new --no-edit 2>&1)"
 	local status=$?
 
 	assertEquals 'output' "$output" "Cannot switch to issues branch: Your index contains uncommitted changes."

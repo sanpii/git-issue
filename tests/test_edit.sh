@@ -13,7 +13,7 @@ testEdit () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	output="$(git issue edit 1 2>&1)"
 	local status=$?
@@ -26,7 +26,7 @@ testEditUnknowId () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	output="$(git issue edit 2 2>&1)"
 	local status=$?
@@ -39,7 +39,7 @@ testEditOneLine () {
 	local output
 
 	git issue init -q
-	git issue new -q
+	git issue new -q --no-edit
 
 	output="$(git issue edit --status=close 1 2>&1)"
 	local status=$?

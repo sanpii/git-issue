@@ -12,7 +12,7 @@ testLsOneIssue () {
 	local output
 
 	git issue init -q
-	git issue new -q 'test 1'
+	git issue new -q --no-edit 'test 1'
 
 	output="$(git issue ls 2>&1)"
 	local status=$?
@@ -24,7 +24,7 @@ testLsOneIssue () {
 testLs () {
 	testLsOneIssue
 
-	git issue new -q 'test 2'
+	git issue new -q --no-edit 'test 2'
 
 	output="$(git issue ls 2>&1)"
 	local status=$?
