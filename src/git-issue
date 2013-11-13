@@ -75,8 +75,17 @@ git_issue_parse_args () {
 				shift
 			;;
 			--?*)
-				eval "$(echo $1 | sed 's/^--//' | sed 's/-/_/g')='$2'"
-				shift 2
+				name=$1
+				if test $(echo $2 | head -c 1) != '-'
+				then
+					value=$2
+					shift
+				else
+					value=true;
+				fi
+
+				eval "$(echo $name | sed 's/^--//' | sed 's/-/_/g')='$value'"
+				shift
 			;;
 			--)
 				shift
