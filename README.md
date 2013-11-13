@@ -56,6 +56,19 @@ This is the required first step:
     $ git issue ls
     1: Issue title
 
+By default, only unclosed issues are listed. You can use filter on *status*,
+*title*, *tags*, *milestone* or *type*:
+
+    $ git issue ls --status=close
+
+Or inverted filter:
+
+    $ git issue ls --status=~accepted
+
+Or multiple values:
+
+    $ git issue ls --status='new|accepted'
+
 ### Edit an issue
 
     $ git issue edit 1

@@ -13,7 +13,7 @@ git issue edit <id>
 	edit issue #id.
 git issue rm <id>
 	delete issue <id>.
-git issue ls
+git issue ls [--status=|--title=|--tags=|--milestone=|--type=]
 	show all issues.
 git issue sync
 	sync issues with remote repository.
@@ -57,7 +57,7 @@ git_issue_parse_args () {
 		new)
 			longOptions="$longOptions,no-edit"
 		;;
-		edit)
+		ls|edit)
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
 		;;
 	esac
@@ -206,6 +206,26 @@ git_issue_rm () {
 
 git_issue_ls () {
 	local issues="$(git ls-files | sort -n)"
+
+	for name in status title tags milestone type
+	do
+		if test "$name" = 'status' -a ! -v "$name"
+		then
+			status='~close'
+		fi
+
+		if test -v $name -a -n "$issues"
+		then
+			value=$(eval echo \$$name | sed 's/|/\\|/g')
+			if test $(echo $value | head -c 1) != '~'
+			then
+				issues=$(grep -l "^$name: \($value\)$" $issues)
+			else
+				value=$(echo $value | sed 's/^~//')
+				issues=$(grep -L "^$name: \($value\)$" $issues)
+			fi
+		fi
+	done
 
 	if test -n "$issues"
 	then
