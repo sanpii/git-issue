@@ -205,7 +205,7 @@ git_issue_rm () {
 }
 
 git_issue_ls () {
-	local issues="$(git ls-files)"
+	local issues="$(git ls-files | sort -n)"
 
 	if test -n "$issues"
 	then
