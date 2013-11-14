@@ -122,7 +122,11 @@ git_issue_switch_branch () {
 	git_local_branch_exists $ISSUE_BRANCH || die $(eval_gettextln 'Git issue not initialized.')
 	git_require_clean_work_tree
 
-	git checkout -q $ISSUE_BRANCH
+	git checkout -q $ISSUE_BRANCH 2>/dev/null
+	if test $? -ne 0
+	then
+		die $(eval_gettextln 'Unable to switch to issues branch')
+	fi
 }
 
 git_issue_restore_branch () {
