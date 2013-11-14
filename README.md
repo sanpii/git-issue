@@ -1,8 +1,30 @@
 # Git-issue
 
-[![Build Status](https://ci.homecomputing.fr/git-issue/build/status)](https://ci.homecomputing.fr/git-issue)
+[![Build Status](http://ci.homecomputing.fr/git-issue/build/status)](http://ci.homecomputing.fr/git-issue)
 
 *Git-issue* is a bug tracker based on git.
+
+## Why?
+
+Git is a great tool to versioning source but also to [store
+everything](http://git-annex.branchable.com/). Git is [designed like a file
+system](http://marc.info/?l=linux-kernel&m=111314792424707), or if you prefer
+buzz words, you can see it like a [nosql
+database](http://opensoul.org/blog/archives/2011/09/01/git-the-nosql-database/).
+A [nosql database over a
+FS](http://www.pdl.cmu.edu/PDL-FTP/Storage/CMU-PDL-12-103.pdf)?.
+
+Sorry, I digress. So why do not use it to store issues? In fact, use git
+automatically makes your issues tracker versioned and distributed, like your
+code.
+
+Of course, it is not the first [distributed issue
+tracker](http://www.cs.unb.ca/~bremner/blog/posts/git-issue-trackers/) but
+*git-issue* exist because the other projects doesn't cover all these objectives:
+
+* fully based on git ;
+* minimal dependencies ;
+* fully tested.
 
 ## Installation
 
