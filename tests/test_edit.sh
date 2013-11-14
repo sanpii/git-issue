@@ -51,6 +51,19 @@ type:'
 	assertEquals 'status code' $status 0
 }
 
+testEditMessage () {
+	git issue init -q
+	git issue new -q --no-edit
+
+	git issue edit -q --status=close -m 'Close issue' 1
+	local status=$?
+
+	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
+
+Close issue'
+	assertEquals 'status code' $status 0
+}
+
 CWD="$(cd "$(dirname "$0")" && pwd)"
 
 . $CWD/common.sh

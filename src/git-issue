@@ -9,7 +9,7 @@ git issue new [--no-edit] [<title>] [<description>]
 	create a new issue.
 git issue show <id>
 	display issue #id.
-git issue edit [--status=|--title=|--tags=|--milestone=|--type=] <id>
+git issue edit [--status=|--title=|--tags=|--milestone=|--type=] [-m=|--message=] <id>
 	edit issue #id.
 git issue rm <id>
 	delete issue <id>.
@@ -27,6 +27,7 @@ OLD_REV=$(git rev-parse --abbrev-ref HEAD)
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 GIT_QUIET=
+COMMIT_MESSAGE=
 
 # {{{ Shell common
 function_exists () {
@@ -57,8 +58,12 @@ git_issue_parse_args () {
 		new)
 			longOptions="$longOptions,no-edit"
 		;;
-		ls|edit)
+		ls)
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
+		;;
+		edit)
+			shortOptions="$shortOptions,m:"
+			longOptions="$longOptions,status:,title:,tags:,milestone:,type:,message:"
 		;;
 	esac
 
@@ -76,6 +81,10 @@ git_issue_parse_args () {
 			-q|--quiet)
 				GIT_QUIET=1
 				shift
+			;;
+			-m|--message)
+				COMMIT_MESSAGE=$2
+				shift 2
 			;;
 			--?*)
 				name=$1
@@ -180,6 +189,7 @@ git_issue_show () {
 
 git_issue_edit () {
 	local id="$1"
+	local message=""
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
@@ -196,7 +206,14 @@ git_issue_edit () {
 
 	$edited || git_editor "$id"
 
-	git_have_changes && git commit -q -m "$(eval_gettextln "Edit issue #${id}")" "$id" && say $(eval_gettextln "Issue #${id} saved.")
+	message="$(eval_gettextln "Edit issue #${id}")"
+	if test -n COMMIT_MESSAGE
+	then
+		message="$message
+
+$COMMIT_MESSAGE"
+	fi
+	git_have_changes && git commit -q -m "$message" "$id" && say $(eval_gettextln "Issue #${id} saved.")
 }
 
 git_issue_rm () {
