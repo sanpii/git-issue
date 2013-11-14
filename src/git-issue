@@ -1,24 +1,47 @@
 #!/bin/bash
 
-USAGE='[help|init|new|show|edit|rm|ls|sync|close]'
-LONG_USAGE='git issue help
-	print long help message.
-git issue init
-	initialize the issue tracker.
-git issue new [--no-edit] [<title>] [<description>]
-	create a new issue.
-git issue show <id>
-	display issue #id.
-git issue edit [--status=|--title=|--tags=|--milestone=|--type=] [-m=|--message=] <id>
-	edit issue #id.
-git issue rm [-m=|--message=] <id>
-	delete issue <id>.
-git issue ls [--status=|--title=|--tags=|--milestone=|--type=]
-	show all issues.
-git issue sync
-	sync issues with remote repository.
-git issue close <id>
-	close issue #id.'
+USAGE='<command> [options] [arguments]
+
+Available commands:
+
+  help        Print this help message
+
+  init        Initialize the issue tracker
+                --quiet, -q
+
+  new         Create a new issue
+                --quiet, -q
+                --no-edit
+
+  show        Display an issue
+                --quiet, -q
+
+  edit        Edit an issue
+                --quiet, -q
+                --status <arg>
+                --title <arg>
+                --tags <arg>
+                --milestone <arg>
+                --type <arg>
+                --message, -m <arg>
+
+  rm          Delete an issue
+                --quiet, -q
+                --message, -m <arg>
+
+  ls          Show all issues
+                --quiet, -q
+                --status <arg>
+                --title <arg>
+                --tags <arg>
+                --milestone <arg>
+                --type <arg>
+
+  sync        Sync issues with remote repository
+                --quiet, -q
+
+  close       Close an issue
+                --quiet, -q'
 
 . git-sh-setup
 . git-sh-i18n
