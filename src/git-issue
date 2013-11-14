@@ -11,7 +11,7 @@ git issue show <id>
 	display issue #id.
 git issue edit [--status=|--title=|--tags=|--milestone=|--type=] [-m=|--message=] <id>
 	edit issue #id.
-git issue rm <id>
+git issue rm [-m=|--message=] <id>
 	delete issue <id>.
 git issue ls [--status=|--title=|--tags=|--milestone=|--type=]
 	show all issues.
@@ -64,6 +64,10 @@ git_issue_parse_args () {
 		edit)
 			shortOptions="$shortOptions,m:"
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:,message:"
+		;;
+		rm)
+			shortOptions="$shortOptions,m:"
+			longOptions="$longOptions,message:"
 		;;
 	esac
 
@@ -221,7 +225,15 @@ git_issue_rm () {
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 	git rm -q "$id"
-	git commit -q -m "Delete issue #$id"
+
+	message="Delete issue #$id"
+	if test -n COMMIT_MESSAGE
+	then
+		message="$message
+
+$COMMIT_MESSAGE"
+	fi
+	git commit -q -m "$message"
 	say $(eval_gettextln "Issue #${id} deleted.")
 }
 
