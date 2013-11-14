@@ -18,7 +18,7 @@ testEdit () {
 	output="$(git issue edit 1 2>&1)"
 	local status=$?
 
-	assert_equal "$(git issue show 1)" '[test]' 'testEdit'
+	assert_equal "$(git issue show --color=none 1)" '[test]' 'testEdit'
 	assert_numeq $status 0 'testEdit'
 
 	assert_equal "$(git show --pretty=format:%B -s issues)" 'Edit issue #1' 'testEdit'
@@ -44,7 +44,7 @@ testEditOneLine () {
 	git issue edit -q --status=close 1
 	local status=$?
 
-	assert_equal "$(git issue show 1)" 'title:
+	assert_equal "$(git issue show --color=none 1)" 'title:
 status: close
 assign:
 tags:

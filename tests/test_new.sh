@@ -30,7 +30,7 @@ testNewEdit () {
 	assert_equal "$output" 'Issue #1 created.' 'testNewEdit'
 	assert_numeq $status 0 'testNewEdit'
 
-	output="$(git issue show 1 2>&1)"
+	output="$(git issue show --color=none 1 2>&1)"
 	local status=$?
 
 	assert_equal "$output" '[test]' 'testNewEdit'
@@ -47,7 +47,7 @@ testNewWithTitle () {
 	assert_equal "$output" 'Issue #1 created.' 'testNewWithTitle'
 	assert_numeq $status 0 'testNewWithTitle'
 
-	output="$(git issue show 1 2>&1)"
+	output="$(git issue show --color=none 1 2>&1)"
 	local status=$?
 
 	assert_equal "$output" 'title: Issue title
@@ -69,7 +69,7 @@ testNewWithDescription () {
 	assert_equal "$output" 'Issue #1 created.' 'testNewWithDescription'
 	assert_numeq $status 0 'testNewWithDescription'
 
-	output="$(git issue show 1 2>&1)"
+	output="$(git issue show --color=none 1 2>&1)"
 	local status=$?
 
 	assert_equal "$output" 'title: Issue title
@@ -93,7 +93,7 @@ testNewWithType () {
 	assert_equal "$output" 'Issue #1 created.' 'testNewWithType'
 	assert_numeq $status 0 'testNewWithType'
 
-	output="$(git issue show 1 2>&1)"
+	output="$(git issue show --color=none 1 2>&1)"
 	local status=$?
 
 	assert_equal "$output" 'title:

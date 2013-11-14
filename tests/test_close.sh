@@ -17,7 +17,7 @@ testClose () {
 	output="$(git issue close 1 2>&1)"
 	local status=$?
 
-	assert_equal "$(git issue show 1)" 'title:
+	assert_equal "$(git issue show --color=none 1)" 'title:
 status: close
 assign:
 tags:

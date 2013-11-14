@@ -18,7 +18,7 @@ testDelete () {
 	local status=$?
 
 	assert_equal "$output" 'Issue #1 deleted.' 'testDelete'
-	assert_equal "$(git issue show 1 2>&1)" "Issue #1 doesn't exist" 'testDelete'
+	assert_equal "$(git issue show --color=none 1 2>&1)" "Issue #1 doesn't exist" 'testDelete'
 	assert_numeq $status 0 'testDelete'
 
 	assert_equal "$(git show --pretty=format:%B -s issues)" 'Delete issue #1' 'testDelete'

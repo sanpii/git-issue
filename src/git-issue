@@ -21,6 +21,7 @@ Available commands:
 
   show        Display an issue
                 --quiet, -q
+                --color <arg>
 
   edit        Edit an issue
                 --quiet, -q
@@ -42,6 +43,7 @@ Available commands:
                 --tags <arg>
                 --milestone <arg>
                 --type <arg>
+                --color <arg>
 
   sync        Sync issues with remote repository
                 --quiet, -q
@@ -76,6 +78,14 @@ git_have_changes () {
 	test -n "$(git status --porcelain)"
 }
 
+git_want_color () {
+	test -t 1 || git config --get-colorbool color.interactive $?
+}
+
+git_get_color () {
+	$COLOR && git config --get-color "$1" "$2"
+}
+
 git_issue_parse_args () {
 	local shortOptions='q'
 	local longOptions='quiet'
@@ -83,12 +93,17 @@ git_issue_parse_args () {
 	COMMAND="${1-list}"
 	shift
 
+	COLOR=$(git_want_color)
+
 	case $COMMAND in
 		new)
 			longOptions="$longOptions,no-edit,status:,assign:,title:,tags:,milestone:,type:"
 		;;
 		list)
-			longOptions="$longOptions,status:,assign:,title:,tags:,milestone:,type:"
+			longOptions="$longOptions,color:,status:,assign:,title:,tags:,milestone:,type:"
+		;;
+		show)
+			longOptions="$longOptions,color:"
 		;;
 		edit)
 			shortOptions="$shortOptions,m:"
@@ -111,6 +126,17 @@ git_issue_parse_args () {
 	while true
 	do
 		case $1 in
+			--color)
+				case $2 in
+					always)
+						COLOR=true
+					;;
+					none)
+						COLOR=false
+					;;
+				esac
+				shift 2
+			;;
 			-q|--quiet)
 				GIT_QUIET=1
 				shift
@@ -187,6 +213,13 @@ $COMMIT_MESSAGE"
 	fi
 	git commit -q -m "$message" $filename
 }
+
+git_issue_get () {
+	local id=$1
+	local field=$2
+
+	grep "^$field:.*$" $id | sed "s/^$field://" | sed 's/^ //'
+}
 # }}}
 # {{{ Commands
 git_issue_help () {
@@ -241,11 +274,13 @@ $description" >"$id"
 
 git_issue_show () {
 	local id="$1"
+	local c_metadata=$(git_get_color 'color.issue.metadata' 'yellow bold')
+	local c_reset=$(git_get_color '' 'reset')
 
 	git_issue_switch_branch
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
-	git_pager $id
+	cat $id | sed "s/^\(title\|status\|tags\|assign\|type\|milestone\):/${c_metadata}\\$1:${c_reset}/" | git_pager
 }
 
 git_issue_edit () {
@@ -309,7 +344,19 @@ git_issue_list () {
 
 	if test -n "$issues"
 	then
-		grep -H '^title:' $issues | sed 's/title://'
+		local c_id=$(git_get_color 'color.issue.id' 'blue bold')
+		local c_reset=$(git_get_color '' 'reset')
+
+		for id in $issues
+		do
+			local t=$(git_issue_get $id 'title')
+
+			if test -n "$t"
+			then
+				t=" $t"
+			fi
+			echo "${c_id}$id:${c_reset}$t"
+		done
 	else
 		echo $(gettextln 'Nothing to do :)')
 	fi
