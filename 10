@@ -1,0 +1,9 @@
+title: Tty detection failed
+status: confirmed
+assign:
+tags: color, cli
+milestone:
+type: bug
+
+The function ``git_want_color`` doesn't work properly because ``test -t 1``
+always return ``true``.
