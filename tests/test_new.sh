@@ -41,7 +41,7 @@ testNewWithTitle () {
 	local output
 
 	git issue init -q
-	output="$(git issue new --no-edit 'Issue title' 2>&1)"
+	output="$(git issue new --no-edit --title='Issue title' 2>&1)"
 	local status=$?
 
 	assert_equal "$output" 'Issue #1 created.' 'testNewWithTitle'
@@ -63,7 +63,7 @@ testNewWithDescription () {
 	local output
 
 	git issue init -q
-	output="$(git issue new 'Issue title' 'Issue description' 2>&1)"
+	output="$(git issue new --title='Issue title' 'Issue description' 2>&1)"
 	local status=$?
 
 	assert_equal "$output" 'Issue #1 created.' 'testNewWithDescription'
@@ -80,6 +80,28 @@ milestone:
 type:
 
 Issue description' 'testNewWithDescription'
+	assert_numeq $status 0
+}
+
+testNewWithType () {
+	local output
+
+	git issue init -q
+	output="$(git issue new --no-edit --type='bug' 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'Issue #1 created.' 'testNewWithType'
+	assert_numeq $status 0 'testNewWithType'
+
+	output="$(git issue show 1 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'title:
+status: new
+assign:
+tags:
+milestone:
+type: bug' 'testNewWithType'
 	assert_numeq $status 0
 }
 

@@ -44,7 +44,7 @@ testEditOneLine () {
 	git issue edit -q --status=close 1
 	local status=$?
 
-	assert_equal "$(git issue show 1)" 'title: 
+	assert_equal "$(git issue show 1)" 'title:
 status: close
 assign:
 tags:

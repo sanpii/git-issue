@@ -12,6 +12,12 @@ Available commands:
   new         Create a new issue
                 --quiet, -q
                 --no-edit
+                --status <arg>
+                --assign <arg>
+                --title <arg>
+                --tags <arg>
+                --milestone <arg>
+                --type <arg>
 
   show        Display an issue
                 --quiet, -q
@@ -79,7 +85,7 @@ git_issue_parse_args () {
 
 	case $COMMAND in
 		new)
-			longOptions="$longOptions,no-edit"
+			longOptions="$longOptions,no-edit,status:,title:,tags:,milestone:,type:"
 		;;
 		list)
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
@@ -201,18 +207,29 @@ git_issue_init () {
 git_issue_new () {
 	git_issue_switch_branch
 
-	local title="$1"
-	local description="$2"
+	local description="$1"
 	local id=$(( $(git_issue_get_last_id) + 1))
+	local metadata=''
 
-	echo "title: ${title}
-status: new
-assign:
-tags:
-milestone:
-type:
+	if test ! -v "status"
+	then
+		status='new'
+	fi
 
-${description}" >"$id"
+	for name in title status assign tags milestone type
+	do
+		if test -v $name
+		then
+			value=" $(eval echo \$$name)"
+		else
+			value=""
+		fi
+		metadata="$metadata$name:$value
+"
+	done
+
+	echo "$metadata
+$description" >"$id"
 
 	test "$no_edit" != true -a -z "$description" && git_editor "$id"
 

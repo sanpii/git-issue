@@ -24,7 +24,7 @@ testListOneIssue () {
 	local output
 
 	git issue init -q
-	git issue new -q --no-edit 'test 1'
+	git issue new -q --no-edit --title='test 1'
 
 	output="$(git issue list 2>&1)"
 	local status=$?
@@ -38,7 +38,7 @@ testList () {
 
 	testListOneIssue
 
-	git issue new -q --no-edit 'test 2'
+	git issue new -q --no-edit --title='test 2'
 
 	output="$(git issue list 2>&1)"
 	local status=$?
@@ -65,7 +65,7 @@ testListFilter () {
 
 	testList
 	git issue close -q 1
-	git issue new -q --no-edit 'test 3'
+	git issue new -q --no-edit --title='test 3'
 	git issue edit -q --status=accepted 3
 
 	output="$(git issue list --status=close 2>&1)"

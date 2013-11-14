@@ -60,7 +60,7 @@ This is the required first step:
 
 ### Create a new issue
 
-    $ git issue new 'A new issue' 'A long description'
+    $ git issue new --title='A new issue' 'A long description'
     Issue #1 created.
 
 ### Show an issue
