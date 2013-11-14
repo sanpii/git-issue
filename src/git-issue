@@ -57,6 +57,7 @@ Available commands:
 OLD_REV=$(git rev-parse --abbrev-ref HEAD)
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
+COMMAND=
 GIT_QUIET=
 COMMIT_MESSAGE=
 
