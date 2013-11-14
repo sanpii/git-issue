@@ -145,6 +145,19 @@ git_issue_switch_branch () {
 git_issue_restore_branch () {
 	git checkout -q $OLD_REV
 }
+
+git_issue_commit () {
+	local message="$1"
+	local filename="$2"
+
+	if test -n COMMIT_MESSAGE
+	then
+		message="$message
+
+$COMMIT_MESSAGE"
+	fi
+	git commit -q -m "$message" $filename
+}
 # }}}
 # {{{ Commands
 git_issue_help () {
@@ -193,7 +206,6 @@ git_issue_show () {
 
 git_issue_edit () {
 	local id="$1"
-	local message=""
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
@@ -210,14 +222,7 @@ git_issue_edit () {
 
 	$edited || git_editor "$id"
 
-	message="$(eval_gettextln "Edit issue #${id}")"
-	if test -n COMMIT_MESSAGE
-	then
-		message="$message
-
-$COMMIT_MESSAGE"
-	fi
-	git_have_changes && git commit -q -m "$message" "$id" && say $(eval_gettextln "Issue #${id} saved.")
+	git_have_changes && git_issue_commit "Edit issue #${id}" "$id" && say $(eval_gettextln "Issue #${id} saved.")
 }
 
 git_issue_rm () {
@@ -226,15 +231,7 @@ git_issue_rm () {
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 	git rm -q "$id"
 
-	message="Delete issue #$id"
-	if test -n COMMIT_MESSAGE
-	then
-		message="$message
-
-$COMMIT_MESSAGE"
-	fi
-	git commit -q -m "$message"
-	say $(eval_gettextln "Issue #${id} deleted.")
+	git_issue_commit "Delete issue #$id" && say $(eval_gettextln "Issue #${id} deleted.")
 }
 
 git_issue_ls () {
