@@ -38,13 +38,13 @@ testList () {
 
 	testListOneIssue
 
-	git issue new -q --no-edit --title='test 2'
+	git issue new -q --no-edit
 
 	output="$(git issue list 2>&1)"
 	local status=$?
 
 	assert_equal "$output" '1: test 1
-2: test 2' 'testList'
+2:' 'testList'
 	assert_equal $status 0 'testList'
 }
 
@@ -83,7 +83,7 @@ testListFilterNot () {
 	output="$(git issue list --status=~close 2>&1)"
 	local status=$?
 
-	assert_equal "$output" '2: test 2
+	assert_equal "$output" '2:
 3: test 3' 'testListFilterNot'
 	assert_equal $status 0 'testListFilterNot'
 }

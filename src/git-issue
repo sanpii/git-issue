@@ -294,7 +294,6 @@ git_issue_list () {
 
 	for name in status title assign tags milestone type
 	do
-
 		if test -v $name -a -n "$issues"
 		then
 			value=$(eval echo \$$name | sed 's/|/\\|/g')
@@ -310,7 +309,7 @@ git_issue_list () {
 
 	if test -n "$issues"
 	then
-		grep -H '^title: .*' $issues | sed 's/title://'
+		grep -H '^title:' $issues | sed 's/title://'
 	else
 		echo $(gettextln 'Nothing to do :)')
 	fi
