@@ -36,12 +36,10 @@ testEditUnknowId () {
 }
 
 testEditOneLine () {
-	local output
-
 	git issue init -q
 	git issue new -q --no-edit
 
-	output="$(git issue edit --status=close 1 2>&1)"
+	git issue edit -q --status=close 1
 	local status=$?
 
 	assertEquals 'output' "$(git issue show 1)" 'title: 
