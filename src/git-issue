@@ -85,14 +85,14 @@ git_issue_parse_args () {
 
 	case $COMMAND in
 		new)
-			longOptions="$longOptions,no-edit,status:,title:,tags:,milestone:,type:"
+			longOptions="$longOptions,no-edit,status:,assign:,title:,tags:,milestone:,type:"
 		;;
 		list)
-			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
+			longOptions="$longOptions,status:,assign:,title:,tags:,milestone:,type:"
 		;;
 		edit)
 			shortOptions="$shortOptions,m:"
-			longOptions="$longOptions,status:,title:,tags:,milestone:,type:,message:"
+			longOptions="$longOptions,status:,assign:,title:,tags:,milestone:,type:,message:"
 		;;
 		delete)
 			shortOptions="$shortOptions,m:"
@@ -256,7 +256,7 @@ git_issue_edit () {
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
 	edited=false
-	for name in status title tags milestone type
+	for name in status title assign tags milestone type
 	do
 		if test -v $name
 		then
@@ -292,7 +292,7 @@ git_issue_list () {
 		status='~close'
 	fi
 
-	for name in status title tags milestone type
+	for name in status title assign tags milestone type
 	do
 
 		if test -v $name -a -n "$issues"
