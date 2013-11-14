@@ -201,7 +201,7 @@ git_issue_init () {
 git_issue_new () {
 	local title="$1"
 	local description="$2"
-	local id=$(expr $(git_issue_get_last_id) + 1)
+	local id=$(( $(git_issue_get_last_id) + 1))
 
 	echo "title: ${title}
 status: new
