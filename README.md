@@ -75,21 +75,21 @@ This is the required first step:
 
 ### List all issue
 
-    $ git issue ls
+    $ git issue list
     1: Issue title
 
 By default, only unclosed issues are listed. You can use filter on *status*,
 *title*, *tags*, *milestone* or *type*:
 
-    $ git issue ls --status=close
+    $ git issue list --status=close
 
 Or inverted filter:
 
-    $ git issue ls --status=~accepted
+    $ git issue list --status=~accepted
 
 Or multiple values:
 
-    $ git issue ls --status='new|accepted'
+    $ git issue list --status='new|accepted'
 
 ### Edit an issue
 
@@ -110,7 +110,7 @@ And you can more rapidly close an issue:
 
 ### Delete an issue
 
-    $ git issue rm 1
+    $ git issue delete 1
 
 ### Synchronize issues
 

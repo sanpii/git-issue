@@ -25,11 +25,11 @@ Available commands:
                 --type <arg>
                 --message, -m <arg>
 
-  rm          Delete an issue
+  delete      Delete an issue
                 --quiet, -q
                 --message, -m <arg>
 
-  ls          Show all issues
+  list        Show all issues
                 --quiet, -q
                 --status <arg>
                 --title <arg>
@@ -81,14 +81,14 @@ git_issue_parse_args () {
 		new)
 			longOptions="$longOptions,no-edit"
 		;;
-		ls)
+		list)
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:"
 		;;
 		edit)
 			shortOptions="$shortOptions,m:"
 			longOptions="$longOptions,status:,title:,tags:,milestone:,type:,message:"
 		;;
-		rm)
+		delete)
 			shortOptions="$shortOptions,m:"
 			longOptions="$longOptions,message:"
 		;;
@@ -248,7 +248,7 @@ git_issue_edit () {
 	git_have_changes && git_issue_commit "Edit issue #${id}" "$id" && say $(eval_gettextln "Issue #${id} saved.")
 }
 
-git_issue_rm () {
+git_issue_delete () {
 	local id="$1"
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
@@ -257,7 +257,7 @@ git_issue_rm () {
 	git_issue_commit "Delete issue #$id" && say $(eval_gettextln "Issue #${id} deleted.")
 }
 
-git_issue_ls () {
+git_issue_list () {
 	local issues="$(git ls-files | sort -n)"
 
 	for name in status title tags milestone type

@@ -26,7 +26,7 @@ testSyncPush () {
 	assert_numeq $status 0 'testSyncPush'
 
 	cd "$REPO"
-	output="$(git issue ls)"
+	output="$(git issue list)"
 
 	assert_equal "$output" '1: test 1' 'testSyncPush'
 	assert_numeq $status 0 'testSyncPush'
@@ -46,7 +46,7 @@ testSyncPull () {
 	assert_equal "$output" 'Issues synced.' 'testSyncPull'
 	assert_numeq $status 0 'testSyncPull'
 
-	output="$(git issue ls)"
+	output="$(git issue list)"
 
 	assert_equal "$output" '1: test 1' 'testSyncPull'
 	assert_numeq $status 0 'testSyncPull'
