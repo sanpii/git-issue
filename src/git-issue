@@ -86,7 +86,8 @@ git_want_color () {
 git_get_color () {
 	$COLOR && git config --get-color "$1" "$2"
 }
-
+# }}}
+# {{{ Git issue common
 git_issue_parse_args () {
 	local shortOptions='q'
 	local longOptions='quiet'
@@ -171,8 +172,7 @@ git_issue_parse_args () {
 		REMAINING_ARG="$REMAINING_ARG '$arg'"
 	done
 }
-# }}}
-# {{{ Git issue common
+
 git_issue_get_last_id () {
 	local id=$(ls -1 | grep '[0-9]\+' | sort -n | tail -1)
 
