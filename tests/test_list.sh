@@ -8,6 +8,18 @@ tearDown () {
 	deleteTestRepository
 }
 
+testListDefaultAction () {
+	local output
+
+	git issue init -q
+
+	output="$(git issue 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'Nothing to do :)' 'testListDefaultAction'
+	assert_equal $status 0 'testListDefaultAction'
+}
+
 testListOneIssue () {
 	local output
 

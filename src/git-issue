@@ -74,7 +74,7 @@ git_issue_parse_args () {
 	local shortOptions='q'
 	local longOptions='quiet'
 
-	COMMAND="$1"
+	COMMAND="${1-list}"
 	shift
 
 	case $COMMAND in
@@ -327,14 +327,9 @@ git_issue_close () {
 
 trap 'git_issue_restore_branch' EXIT
 
-if test $# -eq 0
-then
-	usage
-else
-	git_issue_parse_args "$@"
+git_issue_parse_args "$@"
 
-	function_exists "git_issue_${COMMAND}" || die $(eval_gettextln "git issue $COMMAND doesn't exist")
+function_exists "git_issue_${COMMAND}" || die $(eval_gettextln "git issue $COMMAND doesn't exist")
 
-	test $COMMAND != 'help' -a $COMMAND != 'init' -a $COMMAND != 'sync' && git_issue_switch_branch
-	eval git_issue_${COMMAND} $REMAINING_ARG
-fi
+test $COMMAND != 'help' -a $COMMAND != 'init' -a $COMMAND != 'sync' && git_issue_switch_branch
+eval git_issue_${COMMAND} $REMAINING_ARG
