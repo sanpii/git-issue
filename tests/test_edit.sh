@@ -20,6 +20,8 @@ testEdit () {
 
 	assertEquals 'output' "$(git issue show 1)" '[test]'
 	assertEquals 'status code' $status 0
+
+	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1'
 }
 
 testEditUnknowId () {

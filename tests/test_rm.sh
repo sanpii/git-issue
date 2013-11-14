@@ -20,6 +20,8 @@ testRm () {
 	assertEquals 'output' "$output" 'Issue #1 deleted.'
 	assertEquals 'output' "$(git issue show 1 2>&1)" "Issue #1 doesn't exist"
 	assertEquals 'status code' $status 0
+
+	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Delete issue #1'
 }
 
 testRmUnknowId () {
