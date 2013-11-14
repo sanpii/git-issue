@@ -287,12 +287,13 @@ git_issue_list () {
 
 	local issues="$(git ls-files | sort -n)"
 
+	if test ! -v "status"
+	then
+		status='~close'
+	fi
+
 	for name in status title tags milestone type
 	do
-		if test "$name" = 'status' -a ! -v "$name"
-		then
-			status='~close'
-		fi
 
 		if test -v $name -a -n "$issues"
 		then
