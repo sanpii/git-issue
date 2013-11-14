@@ -1,3 +1,3 @@
-[submodule "shunit2"]
-	path = shunit2
-	url = git://github.com/deniscostadsc/shunit2.git
+[submodule "shunt"]
+	path = shunt
+	url = https://github.com/odb/shunt.git

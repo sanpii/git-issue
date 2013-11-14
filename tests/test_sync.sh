@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -22,14 +22,14 @@ testSyncPush () {
 	output="$(git issue sync 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Issues synced.'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'Issues synced.' 'testSyncPush'
+	assert_numeq $status 0 'testSyncPush'
 
 	cd "$REPO"
 	output="$(git issue ls)"
 
-	assertEquals 'output' "$output" '1: test 1'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1' 'testSyncPush'
+	assert_numeq $status 0 'testSyncPush'
 }
 
 testSyncPull () {
@@ -43,13 +43,13 @@ testSyncPull () {
 	output="$(git issue sync 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Issues synced.'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'Issues synced.' 'testSyncPull'
+	assert_numeq $status 0 'testSyncPull'
 
 	output="$(git issue ls)"
 
-	assertEquals 'output' "$output" '1: test 1'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1' 'testSyncPull'
+	assert_numeq $status 0 'testSyncPull'
 }
 
 testSyncNothing () {
@@ -58,8 +58,8 @@ testSyncNothing () {
 	output="$(git issue sync 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Nothing to sync.'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'Nothing to sync.' 'testSyncNothing'
+	assert_numeq $status 0 'testSyncNothing'
 }
 
 testSyncConflict () {
@@ -76,10 +76,7 @@ testSyncConflict () {
 	output="$(git issue sync 2>&1)"
 	local status=$?
 
-	assertEquals 'status code' $status 1
+	assert_numeq $status 1 'testSyncConflict'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh

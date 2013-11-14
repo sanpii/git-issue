@@ -1,11 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-PATH="$CWD/src":$PATH
+export CWD="$(cd "$(dirname "$0")" && pwd)"
+export PATH="$CWD/src":$PATH
 
-PART=${1-*}
+status=0
+part=${1-*}
 
-for t in $CWD/tests/test_$PART.sh
+for t in $CWD/tests/test_$part.sh
 do
-	$t
+	$CWD/shunt/shunt.sh $t
+	status=$(( status + $? ))
 done
+
+exit $status

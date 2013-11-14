@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 createTestRepository () {
 	OLD_PWD=$(pwd)
@@ -12,4 +12,13 @@ createTestRepository () {
 deleteTestRepository () {
 	cd "$OLD_PWD"
 	rm -rf "$REPO"
+}
+
+run_tests () {
+	for f in $(compgen -A function | grep '^test')
+	do
+		setUp
+		$f
+		tearDown
+	done
 }

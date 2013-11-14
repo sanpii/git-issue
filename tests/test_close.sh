@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -17,20 +17,17 @@ testClose () {
 	output="$(git issue close 1 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$(git issue show 1)" 'title: 
+	assert_equal "$(git issue show 1)" 'title: 
 status: close
 assign:
 tags:
 milestone:
-type:'
-	assertEquals 'status code' $status 0
+type:' 'testClose'
+	assert_numeq $status 0 'testClose'
 
-	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
+	assert_equal "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
 
-Close issue.'
+Close issue.' 'testClose'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh

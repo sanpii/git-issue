@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -17,11 +17,11 @@ testRm () {
 	output="$(git issue rm 1 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Issue #1 deleted.'
-	assertEquals 'output' "$(git issue show 1 2>&1)" "Issue #1 doesn't exist"
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'Issue #1 deleted.' 'testRm'
+	assert_equal "$(git issue show 1 2>&1)" "Issue #1 doesn't exist" 'testRm'
+	assert_numeq $status 0 'testRm'
 
-	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Delete issue #1'
+	assert_equal "$(git show --pretty=format:%B -s issues)" 'Delete issue #1' 'testRm'
 }
 
 testRmUnknowId () {
@@ -32,8 +32,8 @@ testRmUnknowId () {
 	output="$(git issue rm 1 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" "Issue #1 doesn't exist"
-	assertEquals 'status code' $status 1
+	assert_equal "$output" "Issue #1 doesn't exist" 'testRmUnknowId'
+	assert_numeq $status 1 'testRmUnknowId'
 }
 
 testRmMessage() {
@@ -43,13 +43,10 @@ testRmMessage() {
 	git issue rm -q -m 'Too old' 1
 	local status=$?
 
-	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Delete issue #1
+	assert_equal "$(git show --pretty=format:%B -s issues)" 'Delete issue #1
 
-Too old'
-	assertEquals 'status code' $status 0
+Too old' 'testRmMessage'
+	assert_numeq $status 0 'testRmMessage'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh

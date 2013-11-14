@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -17,8 +17,8 @@ testLsOneIssue () {
 	output="$(git issue ls 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" '1: test 1'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1' 'testLsOneIssue'
+	assert_numeq $status 0 'testLsOneIssue'
 }
 
 testLs () {
@@ -31,9 +31,9 @@ testLs () {
 	output="$(git issue ls 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" '1: test 1
-2: test 2'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1
+2: test 2' 'testLs'
+	assert_equal $status 0 'testLs'
 }
 
 testLsNoIssue () {
@@ -44,8 +44,8 @@ testLsNoIssue () {
 	output="$(git issue ls 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'Nothing to do :)'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'Nothing to do :)' 'testLsNoIssue'
+	assert_equal $status 0 'testLsNoIssue'
 }
 
 testLsFilter () {
@@ -59,8 +59,8 @@ testLsFilter () {
 	output="$(git issue ls --status=close 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" '1: test 1'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1' 'testLsFilter'
+	assert_equal $status 0 'testLsFilter'
 }
 
 testLsFilterNot () {
@@ -71,9 +71,9 @@ testLsFilterNot () {
 	output="$(git issue ls --status=~close 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" '2: test 2
-3: test 3'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '2: test 2
+3: test 3' 'testLsFilterNot'
+	assert_equal $status 0 'testLsFilterNot'
 }
 
 testLsFilterOr () {
@@ -84,12 +84,9 @@ testLsFilterOr () {
 	output="$(git issue ls --status='accepted|close' 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" '1: test 1
-3: test 3'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" '1: test 1
+3: test 3' 'testLsFilterOr'
+	assert_equal $status 0 'testLsFilterOr'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -21,8 +21,8 @@ testShow () {
 	output="$(git issue show 1 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" 'test'
-	assertEquals 'status code' $status 0
+	assert_equal "$output" 'test' 'testShow'
+	assert_numeq $status 0 'testShow'
 }
 
 testShowUnknowId () {
@@ -34,11 +34,8 @@ testShowUnknowId () {
 	output="$(git issue show 2 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" "Issue #2 doesn't exist"
-	assertEquals 'status code' $status 1
+	assert_equal "$output" "Issue #2 doesn't exist" 'testShowUnknowId'
+	assert_numeq $status 1 'testShowUnknowId'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh

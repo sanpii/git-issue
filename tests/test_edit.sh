@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 setUp () {
 	createTestRepository
@@ -18,10 +18,10 @@ testEdit () {
 	output="$(git issue edit 1 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$(git issue show 1)" '[test]'
-	assertEquals 'status code' $status 0
+	assert_equal "$(git issue show 1)" '[test]' 'testEdit'
+	assert_numeq $status 0 'testEdit'
 
-	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1'
+	assert_equal "$(git show --pretty=format:%B -s issues)" 'Edit issue #1' 'testEdit'
 }
 
 testEditUnknowId () {
@@ -33,8 +33,8 @@ testEditUnknowId () {
 	output="$(git issue edit 2 2>&1)"
 	local status=$?
 
-	assertEquals 'output' "$output" "Issue #2 doesn't exist"
-	assertEquals 'status code' $status 1
+	assert_equal "$output" "Issue #2 doesn't exist" 'testEditUnknowId'
+	assert_numeq $status 1 'testEditUnknowId'
 }
 
 testEditOneLine () {
@@ -44,13 +44,13 @@ testEditOneLine () {
 	git issue edit -q --status=close 1
 	local status=$?
 
-	assertEquals 'output' "$(git issue show 1)" 'title: 
+	assert_equal "$(git issue show 1)" 'title: 
 status: close
 assign:
 tags:
 milestone:
-type:'
-	assertEquals 'status code' $status 0
+type:' 'testEditOneLine'
+	assert_numeq $status 0 'testEditOneLine'
 }
 
 testEditMessage () {
@@ -60,13 +60,10 @@ testEditMessage () {
 	git issue edit -q --status=close -m 'Close issue' 1
 	local status=$?
 
-	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
+	assert_equal "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
 
-Close issue'
-	assertEquals 'status code' $status 0
+Close issue' 'testEditMessage'
+	assert_numeq $status 0 'testEditMessage'
 }
 
-CWD="$(cd "$(dirname "$0")" && pwd)"
-
-. $CWD/common.sh
-. $CWD/../shunit2/shunit2
+. $CWD/tests/common.sh
