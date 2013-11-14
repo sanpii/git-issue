@@ -112,9 +112,9 @@ And you can more rapidly close an issue:
 
     $ git issue rm 1
 
-### Synchonize issues
+### Synchronize issues
 
-Bidirectionnal synchronize:
+Bidirectional synchronize:
 
     $ git issue sync
     Issues synced.
