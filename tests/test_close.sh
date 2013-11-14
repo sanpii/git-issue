@@ -24,6 +24,10 @@ tags:
 milestone:
 type:'
 	assertEquals 'status code' $status 0
+
+	assertEquals 'output' "$(git show --pretty=format:%B -s issues)" 'Edit issue #1
+
+Close issue.'
 }
 
 CWD="$(cd "$(dirname "$0")" && pwd)"

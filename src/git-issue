@@ -319,6 +319,8 @@ git_issue_sync () {
 
 git_issue_close () {
 	status='close'
+	COMMIT_MESSAGE='Close issue.'
+
 	git_issue_edit "$@"
 }
 # }}}
