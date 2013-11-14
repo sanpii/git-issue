@@ -9,7 +9,7 @@ git issue new [--no-edit] [<title>] [<description>]
 	create a new issue.
 git issue show <id>
 	display issue #id.
-git issue edit <id>
+git issue edit [--status=|--title=|--tags=|--milestone=|--type=] <id>
 	edit issue #id.
 git issue rm <id>
 	delete issue <id>.
