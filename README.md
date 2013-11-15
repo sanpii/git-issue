@@ -4,6 +4,8 @@
 
 *Git-issue* is a bug tracker based on git.
 
+![](doc/screenshot.png)
+
 ## Why?
 
 Git is a great tool to versioning source but also to [store
