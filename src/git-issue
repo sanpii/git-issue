@@ -50,7 +50,11 @@ Available commands:
                 --quiet, -q
 
   close       Close an issue
+                --quiet, -q
+
+  html        Transform issues to HTML page
                 --quiet, -q'
+
 
 . git-sh-setup
 . git-sh-i18n
@@ -88,6 +92,15 @@ git_get_color () {
 
 git_get_current_rev () {
 	git rev-parse --abbrev-ref HEAD
+}
+
+git_create_clean_branch () {
+	local name=$1
+	local message=${2-"Initial commit"}
+
+	git checkout -q --orphan $name
+	test -n "$(git ls-files)" && git rm -qf $(git ls-files)
+	git commit -q --allow-empty -m "$message"
 }
 # }}}
 # {{{ Git issue common
@@ -241,7 +254,12 @@ git_issue_get () {
 	local id=$1
 	local field=$2
 
-	grep "^$field:.*$" $id | sed "s/^$field://" | sed 's/^ //'
+	if test "$field" == 'description'
+	then
+		sed '1,/^$/d' $id
+	else
+		grep "^$field:.*$" $id | sed "s/^$field://" | sed 's/^ //'
+	fi
 }
 # }}}
 # {{{ Commands
@@ -253,9 +271,7 @@ git_issue_init () {
 	git_local_branch_exists $ISSUE_BRANCH && die $(gettextln 'Git issue already initialized.')
 	git_require_clean_work_tree
 
-	git checkout -q --orphan $ISSUE_BRANCH
-	test -n "$(git ls-files)" && git rm -qf $(git ls-files)
-	git commit -q --allow-empty -m "$(gettextln 'git issue init')"
+	git_create_clean_branch $ISSUE_BRANCH "$(gettextln 'git issue init')"
 
 	say $(gettextln 'Git issue initialized.')
 }
@@ -425,6 +441,91 @@ git_issue_close () {
 	COMMIT_MESSAGE='Close issue.'
 
 	git_issue_edit "$@"
+}
+
+git_issue_download_vendor () {
+	url=$1
+	destination=$2
+
+	if test ! -d $(dirname $destination)
+	then
+		mkdir -p $(dirname $destination)
+	fi
+
+	if test ! -f "$destination"
+	then
+		say $(eval_gettextln "Download $destination")
+		wget $url -q -O $destination
+		git add $destination
+		git commit -q -m "Add $destination"
+	fi
+}
+
+html_escape () {
+	echo "$1" | sed 's/&/\&amp;amp;/g; s/</\&amp;lt;/g; s/>/\&amp;gt;/g; s/"/\&amp;quot;/g'
+}
+
+git_issue_html () {
+	branch=$(git config --get issue.html.branch || echo 'gh-pages')
+	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
+	jquery=$(git config --get issue.html.jquery || echo 'http://code.jquery.com/jquery-2.0.3.min.js')
+    bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+
+	if ! git_local_branch_exists "$branch"
+	then
+		git_create_clean_branch "$branch"
+	fi
+	git checkout -q $branch 2>/dev/null
+
+	git_issue_download_vendor $showdow 'js/showdown.js'
+	git_issue_download_vendor $jquery 'js/jquery.js'
+	git_issue_download_vendor $bootsrap 'css/bootsrap.css'
+
+	git checkout $ISSUE_BRANCH '*' 2>/dev/null && git reset .
+
+	echo -n '' > index.html
+	echo '<!DOCTYPE html>
+<html>
+    <head>
+        <title>Issues tracker</title>
+        <link rel="stylesheet" href="css/bootsrap.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>Issues tracker</h1>
+            </div>
+' >>index.html
+	for id in $(git ls-files -o | grep '[[:digit:]]\+')
+	do
+		title=$(html_escape "$(git_issue_get "$id" 'title')")
+		status=$(html_escape "$(git_issue_get "$id" 'status')")
+		description=$(html_escape "$(git_issue_get "$id" 'description')")
+
+		echo "            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
+                <h2><a href="'"'"#${id}"'"'">#</a> ${title}</h2>
+                <blockquote class="'"'"description"'"'">${description}</blockquote>
+            </div>" >>index.html
+
+	done
+	echo '        </div>
+
+        <script type="text/javascript" src="js/showdown.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript">
+            $(".issue .description").each(function () {
+                var converter = new Showdown.converter();
+                $(this).html(converter.makeHtml($(this).text()));
+            });
+        </script>
+    </body>
+</html>' >>index.html
+
+	git add index.html
+	git commit -q -m 'Generate index.html'
+	rm $(git ls-files -o) 2>/dev/null
+
+	say "HTML generated in the '$branch' branch."
 }
 # }}}
 

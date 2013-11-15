@@ -60,6 +60,26 @@ Color use to display id. *blue bold* by default.
 
 Color use to display metadata name. *yellow bold* by default.
 
+### issue.html.branch
+
+The branch where HTML pages as generated. *gh-pages* by default.
+
+### issue.html.showdow
+
+The URL where showdow.js was download.
+<http://raw.github.com/coreyti/showdown/master/src/showdown.js> by default.
+
+### issue.html.jquery
+
+The URL where jquery was download.
+<http://code.jquery.com/jquery-2.0.3.min.js> by default.
+
+### issue.html.bootstrap
+
+The URL where twitter bootstrap was download.
+<http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css> by
+default.
+
 ## Commands
 
 ### Initialize your issue database
@@ -133,6 +153,15 @@ Bidirectional synchronize:
 
     $ git issue sync
     Issues synced.
+
+### Publish issues as HTML
+
+    $ git issue html
+    $ git checkout gh-pages
+    $ git push -u originn gh-pages
+
+You can see the result for this repository
+[here](http://sanpii.github.io/git-issue).
 
 ## A bug?
 
