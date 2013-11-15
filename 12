@@ -1,0 +1,15 @@
+title: Automaticaly stash before switching branch
+status: new
+assign:
+tags: cli
+milestone:
+type: enhancement
+
+Currently, you cannot show/list/wathever issues when you work on your code (git
+switch branch requires clean work tree).
+
+``git_issue_switch_branch`` could make ``stash save`` before switching and
+``git_issue_restore_branch`` a ``stash pop``.
+
+There should be no conflict. But how to determine whether to make a
+``stash pop``?
