@@ -281,7 +281,7 @@ git_issue_show () {
 	git_issue_switch_branch
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
-	cat $id | sed "s/^\(title\|status\|tags\|assign\|type\|milestone\):/${c_metadata}\\$1:${c_reset}/" | git_pager
+	cat $id | sed "s/^\(title\|status\|tags\|assign\|type\|milestone\):/${c_metadata}\1:${c_reset}/" | git_pager
 }
 
 git_issue_edit () {
