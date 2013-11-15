@@ -48,6 +48,35 @@ testList () {
 	assert_equal $status 0 'testList'
 }
 
+testListVerbose () {
+	local output
+
+	testList
+
+	output="$(git issue list --color=none --verbose 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'title: test 1
+status: new
+assign:
+tags:
+milestone:
+type:
+
+
+--
+title:
+status: new
+assign:
+tags:
+milestone:
+type:
+
+
+--' 'testList'
+	assert_equal $status 0 'testListVerbose'
+}
+
 testListNoIssue () {
 	local output
 

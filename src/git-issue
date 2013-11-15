@@ -44,6 +44,7 @@ Available commands:
                 --milestone <arg>
                 --type <arg>
                 --color <arg>
+                --verbose, -v
 
   sync        Sync issues with remote repository
                 --quiet, -q
@@ -58,6 +59,7 @@ OLD_REV=$(git rev-parse --abbrev-ref HEAD)
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 COMMAND=
+VERBOSE=false
 GIT_QUIET=
 COMMIT_MESSAGE=
 
@@ -102,7 +104,8 @@ git_issue_parse_args () {
 			longOptions="$longOptions,no-edit,status:,assign:,title:,tags:,milestone:,type:"
 		;;
 		list)
-			longOptions="$longOptions,color:,status:,assign:,title:,tags:,milestone:,type:"
+			shortOptions="$shortOptions,v"
+			longOptions="$longOptions,verbose,color:,status:,assign:,title:,tags:,milestone:,type:"
 		;;
 		show)
 			longOptions="$longOptions,color:"
@@ -141,6 +144,10 @@ git_issue_parse_args () {
 			;;
 			-q|--quiet)
 				GIT_QUIET=1
+				shift
+			;;
+			-v|--verbose)
+				VERBOSE=true
 				shift
 			;;
 			-m|--message)
@@ -350,13 +357,19 @@ git_issue_list () {
 
 		for id in $issues
 		do
-			local t=$(git_issue_get $id 'title')
-
-			if test -n "$t"
+			if $VERBOSE
 			then
-				t=" $t"
+				git_issue_show $id
+				echo '--'
+			else
+				local t=$(git_issue_get $id 'title')
+
+				if test -n "$t"
+				then
+					t=" $t"
+				fi
+				echo "${c_id}$id:${c_reset}$t"
 			fi
-			echo "${c_id}$id:${c_reset}$t"
 		done
 	else
 		echo $(gettextln 'Nothing to do :)')
