@@ -73,6 +73,9 @@ This is the required first step:
     $ git issue new --title='A new issue' 'A long description'
     Issue #1 created.
 
+If you don't specify a description, the issue is opened in an editor unless the
+``--no-edit`` is added.
+
 ### Show an issue
 
     $ git issue show 1
@@ -82,6 +85,8 @@ This is the required first step:
     tags:
     milestone:
     type:
+
+    A long description
 
 ### List all issue
 
@@ -108,7 +113,7 @@ Or multiple values:
 Git issue open the issue with your preferred editor. Edit, save and quit. The
 issue is automatically committed.
 
-Or you can rapidly edit issue headers:
+Or you can rapidly edit issue metadata:
 
     $ git issue edit --status=done 1
 
