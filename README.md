@@ -52,6 +52,14 @@ The branch name used for store the issues. *issues* by default.
 
 Remote name to publish issues. *origin* by default.
 
+### color.issue.id
+
+Color use to display id. *blue bold* by default.
+
+### color.issue.metadata
+
+Color use to display metadata name. *yellow bold* by default.
+
 ## Commands
 
 ### Initialize your issue database
