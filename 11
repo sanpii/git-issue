@@ -1,0 +1,9 @@
+title: Remove bash specific commands
+status: open
+assign:
+tags:
+milestone:
+type: enhancement
+
+* compgen
+* test -v
