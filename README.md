@@ -137,7 +137,7 @@ Bidirectional synchronize:
 ## A bug?
 
 Clone this repository and use *git-issue* on it. After creating an issue, send
-me a pull or a push request.
+me a pull request.
 
 ## License
 
