@@ -1,0 +1,8 @@
+title: Configure remote
+status: new
+assign:
+tags:
+milestone:
+type: enhancement
+
+Allow to sync issue with other remote than ``origin``
