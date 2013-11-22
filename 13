@@ -1,7 +1,7 @@
 title: Configure remote
 status: new
 assign:
-tags:
+tags: sync
 milestone:
 type: enhancement
 
