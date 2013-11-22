@@ -79,4 +79,11 @@ testSyncConflict () {
 	assert_numeq $status 1 'testSyncConflict'
 }
 
+testSyncRemote () {
+	git remote rename origin upstream
+	git config issue.remote upstream
+
+	testSyncPull
+}
+
 . $CWD/tests/common.sh
