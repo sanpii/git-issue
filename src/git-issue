@@ -56,6 +56,7 @@ Available commands:
 . git-sh-i18n
 
 OLD_REV=$(git rev-parse --abbrev-ref HEAD)
+STASHED=false
 ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 COMMAND=
@@ -196,8 +197,17 @@ git_require_clean_work_tree () {
 
 git_issue_switch_branch () {
 	git_local_branch_exists $ISSUE_BRANCH || die $(eval_gettextln 'Git issue not initialized.')
-	git_require_clean_work_tree
 
+	if git_have_changes
+	then
+		git stash save -q 'Git issue switch branch'
+		if test $? -eq 0
+		then
+			STASHED=true
+		fi
+	fi
+
+	git_require_clean_work_tree
 	git checkout -q $ISSUE_BRANCH 2>/dev/null
 	if test $? -ne 0
 	then
@@ -207,6 +217,7 @@ git_issue_switch_branch () {
 
 git_issue_restore_branch () {
 	git checkout -q $OLD_REV
+	$STASHED && git stash pop -q
 }
 
 git_issue_commit () {

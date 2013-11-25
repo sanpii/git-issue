@@ -125,8 +125,29 @@ testNewUnstash () {
 	output="$(git issue new --no-edit 2>&1)"
 	local status=$?
 
-	assert_equal "$output" "Cannot switch to issues branch: Your index contains uncommitted changes." 'testNewUnstash'
-	assert_numeq $status 1 'NewUnstash'
+	assert_equal "$output" 'Issue #1 created.' 'testNewUnstash'
+	assert_numeq $status 0 'testNewUnstash'
+}
+
+testNewUnstashWithError () {
+	local output
+
+	git issue init -q
+	echo 'test' >test
+	git add test
+	chmod 000 test
+
+	output="$(git issue new --no-edit 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'error: open("test"): Permission denied
+fatal: Unable to process path test
+Cannot save the current worktree state
+Cannot switch to issues branch: You have unstaged changes.
+Additionally, your index contains uncommitted changes.' 'testNewUnstashWithError'
+	assert_numeq $status 1 'testNewUnstashWithError'
+
+	chmod 644 test
 }
 
 . $CWD/tests/common.sh
