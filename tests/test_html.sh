@@ -48,6 +48,7 @@ testHtmlIndex () {
     <head>
         <title>Issues tracker</title>
         <link rel="stylesheet" href="css/bootsrap.css" />
+        <link rel="stylesheet" href="css/main.css" />
     </head>
     <body>
         <div class="container">

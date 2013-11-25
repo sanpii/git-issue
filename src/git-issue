@@ -469,7 +469,7 @@ git_issue_html () {
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
 	jquery=$(git config --get issue.html.jquery || echo 'http://code.jquery.com/jquery-2.0.3.min.js')
-    bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
 
 	if ! git_local_branch_exists "$branch"
 	then
@@ -483,12 +483,24 @@ git_issue_html () {
 
 	git checkout $ISSUE_BRANCH '*' 2>/dev/null && git reset .
 
+	echo '
+		.issue.status-close h2 {
+			text-decoration: line-through;
+		}
+		.issue.status-close .description {
+			display: none;
+		}
+' > css/main.css
+	git add css/main.css
+	git commit -q -m "Add css/main.css"
+
 	echo -n '' > index.html
 	echo '<!DOCTYPE html>
 <html>
     <head>
         <title>Issues tracker</title>
         <link rel="stylesheet" href="css/bootsrap.css" />
+        <link rel="stylesheet" href="css/main.css" />
     </head>
     <body>
         <div class="container">
