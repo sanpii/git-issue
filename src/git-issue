@@ -483,16 +483,17 @@ git_issue_html () {
 
 	git checkout $ISSUE_BRANCH '*' 2>/dev/null && git reset .
 
-	echo '
-		.issue.status-close h2 {
-			text-decoration: line-through;
-		}
-		.issue.status-close .description {
-			display: none;
-		}
-' > css/main.css
-	git add css/main.css
-	git commit -q -m "Add css/main.css"
+	if test ! -f "css/main.css"
+	then
+		echo '.issue.status-close h2 {
+	text-decoration: line-through;
+}
+.issue.status-close .description {
+	display: none;
+}' > css/main.css
+		git add css/main.css
+		git commit -q -m "Add css/main.css"
+	fi
 
 	echo -n '' > index.html
 	echo '<!DOCTYPE html>
