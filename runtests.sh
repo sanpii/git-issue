@@ -2,6 +2,7 @@
 
 export CWD="$(cd "$(dirname "$0")" && pwd)"
 export PATH="$CWD/src":$PATH
+export LANG=C
 
 status=0
 part=${1-*}
