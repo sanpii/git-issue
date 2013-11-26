@@ -22,7 +22,11 @@ testHtmlVendor () {
 
 	assert_equal "$output" "Download js/showdown.js
 Download js/jquery.js
-Download css/bootsrap.css
+Download css/bootstrap.min.css
+Download fonts/glyphicons-halflings-regular.woff
+Download fonts/glyphicons-halflings-regular.ttf
+Download fonts/glyphicons-halflings-regular.svg
+Download fonts/glyphicons-halflings-regular.eot
 HTML generated in the 'gh-pages' branch." 'testHtmlVendor'
 	assert_numeq $status 0 'testHtmlVendor'
 
@@ -47,7 +51,7 @@ testHtmlIndex () {
 <html>
     <head>
         <title>Issues tracker</title>
-        <link rel="stylesheet" href="css/bootsrap.css" />
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
         <link rel="stylesheet" href="css/main.css" />
     </head>
     <body>
@@ -84,7 +88,11 @@ testHtmlBranch () {
 
 	assert_equal "$output" "Download js/showdown.js
 Download js/jquery.js
-Download css/bootsrap.css
+Download css/bootstrap.min.css
+Download fonts/glyphicons-halflings-regular.woff
+Download fonts/glyphicons-halflings-regular.ttf
+Download fonts/glyphicons-halflings-regular.svg
+Download fonts/glyphicons-halflings-regular.eot
 HTML generated in the 'issues-html' branch." 'testHtmlVendor'
 	assert_numeq $status 0 'testHtmlBranch'
 

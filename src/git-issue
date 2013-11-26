@@ -68,6 +68,9 @@ COMMIT_MESSAGE=
 CSS=$(cat <<'EOD'
 .issue.status-close h2 {
     text-decoration: line-through;
+    font-size: 1.2em;
+    color: #CCCCCC;
+    margin: 0;
 }
 
 .issue.status-close .description {
@@ -89,7 +92,7 @@ HTML=$(cat <<'EOD'
 <html>
     <head>
         <title>Issues tracker</title>
-        <link rel=\"stylesheet\" href=\"css/bootsrap.css\" />
+        <link rel=\"stylesheet\" href=\"css/bootstrap.min.css\" />
         <link rel=\"stylesheet\" href=\"css/main.css\" />
     </head>
     <body>
@@ -552,7 +555,7 @@ git_issue_html () {
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
 	jquery=$(git config --get issue.html.jquery || echo 'http://code.jquery.com/jquery-2.0.3.min.js')
-	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2')
 
 	if ! git_local_branch_exists "$branch"
 	then
@@ -562,7 +565,10 @@ git_issue_html () {
 
 	git_issue_download_vendor "$showdow" 'js/showdown.js'
 	git_issue_download_vendor "$jquery" 'js/jquery.js'
-	git_issue_download_vendor "$bootsrap" 'css/bootsrap.css'
+	for f in "css/bootstrap.min.css" "fonts/glyphicons-halflings-regular.woff" "fonts/glyphicons-halflings-regular.ttf" "fonts/glyphicons-halflings-regular.svg" "fonts/glyphicons-halflings-regular.eot"
+	do
+		git_issue_download_vendor "$bootsrap/$f" "$f"
+	done
 
 	git_issue_render "$CSS" 'css/main.css'
 	git_issue_render "$JS" 'js/main.js'

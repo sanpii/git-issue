@@ -77,8 +77,7 @@ The URL where jquery was download.
 ### issue.html.bootstrap
 
 The URL where twitter bootstrap was download.
-<http://netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css> by
-default.
+<http://netdna.bootstrapcdn.com/bootstrap/3.0.2> by default.
 
 ## Commands
 
