@@ -79,6 +79,10 @@ The URL where jquery was download.
 The URL where twitter bootstrap was download.
 <http://netdna.bootstrapcdn.com/bootstrap/3.0.2> by default.
 
+### issue.html.charset
+
+The charset specified in the content type. *UTF-8* by default.
+
 ## Commands
 
 ### Initialize your issue database
