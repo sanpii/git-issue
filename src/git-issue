@@ -307,6 +307,10 @@ git_issue_get () {
 	fi
 }
 
+git_issue_get_all () {
+	echo $(git ls-files | grep '[[:digit:]]\+' | sort -n)
+}
+
 git_issue_download_vendor () {
 	url=$1
 	destination=$2
@@ -444,7 +448,7 @@ git_issue_delete () {
 git_issue_list () {
 	git_issue_switch_branch
 
-	local issues="$(git ls-files | sort -n)"
+	local issues="$(git_issue_get_all)"
 
 	if test ! -v "status"
 	then
@@ -529,6 +533,22 @@ git_issue_close () {
 }
 
 git_issue_html () {
+	git_issue_switch_branch
+
+	issuesList=''
+	for id in $(git_issue_get_all)
+	do
+		title=$(git_issue_html_escape "$(git_issue_get "$id" 'title')")
+		status=$(git_issue_html_escape "$(git_issue_get "$id" 'status')")
+		description=$(git_issue_html_escape "$(git_issue_get "$id" 'description')")
+
+		issuesList="$issuesList
+            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
+                <h2><a href="'"'"#${id}"'"'">#</a> ${title}</h2>
+                <blockquote class="'"'"description"'"'">${description}</blockquote>
+            </div>"
+	done
+
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
 	jquery=$(git config --get issue.html.jquery || echo 'http://code.jquery.com/jquery-2.0.3.min.js')
@@ -546,25 +566,7 @@ git_issue_html () {
 
 	git_issue_render "$CSS" 'css/main.css'
 	git_issue_render "$JS" 'js/main.js'
-
-	git checkout $ISSUE_BRANCH '*' 2>/dev/null && git reset .
-	issuesList=''
-	for id in $(git ls-files -o | grep '[[:digit:]]\+')
-	do
-		title=$(git_issue_html_escape "$(git_issue_get "$id" 'title')")
-		status=$(git_issue_html_escape "$(git_issue_get "$id" 'status')")
-		description=$(git_issue_html_escape "$(git_issue_get "$id" 'description')")
-
-		issuesList="$issuesList
-            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
-                <h2><a href="'"'"#${id}"'"'">#</a> ${title}</h2>
-                <blockquote class="'"'"description"'"'">${description}</blockquote>
-            </div>"
-	done
-
 	git_issue_render "$HTML" 'index.html' "$issuesList"
-
-	rm $(git ls-files -o) 2>/dev/null
 
 	say "HTML generated in the '$branch' branch."
 }
