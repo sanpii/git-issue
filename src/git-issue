@@ -66,15 +66,15 @@ COMMIT_MESSAGE=
 
 # {{{ Templates
 CSS=$(cat <<'EOD'
+.issue h2 {
+    display: inline-block;
+}
+
 .issue.status-close h2 {
     text-decoration: line-through;
     font-size: 1.2em;
     color: #CCCCCC;
     margin: 0;
-}
-
-.issue.status-close .description {
-    display: none;
 }
 EOD
 )
@@ -83,7 +83,17 @@ JS=$(cat <<'EOD'
 $(".issue .description").each(function () {
     var converter = new Showdown.converter();
     $(this).html(converter.makeHtml($(this).text()));
-})
+});
+
+$(".issue .expand").on('click', function () {
+    var description = $(this).next(".description");
+    var expand = $(this).children();
+
+    expand.toggleClass("glyphicon-collapse-up");
+    expand.toggleClass("glyphicon-collapse-down");
+    description.toggle();
+});
+$(".issue.status-close .expand").click();
 EOD
 )
 
@@ -548,6 +558,7 @@ git_issue_html () {
 		issuesList="$issuesList
             <div id=\"${id}\" class=\"issue status-${status}\">
                 <h2><a href=\"#${id}\">#</a> ${title}</h2>
+                <a class=\"expand\" href=\"#\"><span class=\"glyphicon glyphicon-collapse-up\"></span></a>
                 <blockquote class=\"description\">${description}</blockquote>
             </div>"
 	done

@@ -62,10 +62,12 @@ testHtmlIndex () {
 
             <div id="1" class="issue status-new">
                 <h2><a href="#1">#</a> Issue 1</h2>
+                <a class="expand" href="#"><span class="glyphicon glyphicon-collapse-up"></span></a>
                 <blockquote class="description">*First* issue</blockquote>
             </div>
             <div id="2" class="issue status-new">
                 <h2><a href="#2">#</a> Issue 2</h2>
+                <a class="expand" href="#"><span class="glyphicon glyphicon-collapse-up"></span></a>
                 <blockquote class="description">* One thing * Other &amp;lt;thing&amp;gt;</blockquote>
             </div>
         </div>
