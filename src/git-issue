@@ -76,6 +76,10 @@ CSS=$(cat <<'EOD'
     color: #CCCCCC;
     margin: 0;
 }
+
+.issue .metadata .glyphicon {
+    margin-right: 1em;
+}
 EOD
 )
 
@@ -86,12 +90,14 @@ $(".issue .description").each(function () {
 });
 
 $(".issue .expand").on('click', function () {
-    var description = $(this).next(".description");
+    var description = $(this).nextAll(".description");
+    var metadata = $(this).nextAll(".metadata");
     var expand = $(this).children();
 
     expand.toggleClass("glyphicon-collapse-up");
     expand.toggleClass("glyphicon-collapse-down");
     description.toggle();
+    metadata.toggle();
 });
 $(".issue.status-close .expand").click();
 EOD
@@ -554,12 +560,25 @@ git_issue_html () {
 		title=$(git_issue_html_escape "$(git_issue_get "$id" 'title')")
 		status=$(git_issue_html_escape "$(git_issue_get "$id" 'status')")
 		description=$(git_issue_html_escape "$(git_issue_get "$id" 'description')")
+		tags=$(git_issue_html_escape "$(git_issue_get "$id" 'tags')")
+		asign=$(git_issue_html_escape "$(git_issue_get "$id" 'asign')")
+		milestone=$(git_issue_html_escape "$(git_issue_get "$id" 'milestone')")
+		type=$(git_issue_html_escape "$(git_issue_get "$id" 'type')")
+		if test -n "$type"
+		then
+			type="[$type] "
+		fi
 
 		issuesList="$issuesList
             <div id=\"${id}\" class=\"issue status-${status}\">
-                <h2><a href=\"#${id}\">#</a> ${title}</h2>
+                <h2><a href=\"#${id}\">#</a> ${type}${title}</h2>
                 <a class=\"expand\" href=\"#\"><span class=\"glyphicon glyphicon-collapse-up\"></span></a>
-                <blockquote class=\"description\">${description}</blockquote>
+                <blockquote class=\"metadata\">
+                    <div class=\"tags\"><span class=\"glyphicon glyphicon-tags\"></span> ${tags:--}</div>
+                    <div class=\"asign\"><span class=\"glyphicon glyphicon-user\"></span> ${asign:--}</div>
+                    <div class=\"milestone\"><span class=\"glyphicon glyphicon-bookmark\"></span> ${milestone:--}</div>
+                </blockquote>
+                <div class=\"well description\">${description}</div>
             </div>"
 	done
 

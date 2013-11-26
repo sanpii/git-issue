@@ -39,8 +39,8 @@ HTML generated in the 'gh-pages' branch." 'testHtmlVendor'
 testHtmlIndex () {
 	git issue init -q
 
-	git issue new -q --title='Issue 1' '*First* issue'
-	git issue new -q --title='Issue 2' '* One thing
+	git issue new -q --title='Issue 1' --type='bug' '*First* issue'
+	git issue new -q --title='Issue 2' --tags='test' '* One thing
 * Other <thing>'
 
 	git issue html -q
@@ -61,14 +61,24 @@ testHtmlIndex () {
             </div>
 
             <div id="1" class="issue status-new">
-                <h2><a href="#1">#</a> Issue 1</h2>
+                <h2><a href="#1">#</a> [bug] Issue 1</h2>
                 <a class="expand" href="#"><span class="glyphicon glyphicon-collapse-up"></span></a>
-                <blockquote class="description">*First* issue</blockquote>
+                <blockquote class="metadata">
+                    <div class="tags"><span class="glyphicon glyphicon-tags"></span> -</div>
+                    <div class="asign"><span class="glyphicon glyphicon-user"></span> -</div>
+                    <div class="milestone"><span class="glyphicon glyphicon-bookmark"></span> -</div>
+                </blockquote>
+                <div class="well description">*First* issue</div>
             </div>
             <div id="2" class="issue status-new">
                 <h2><a href="#2">#</a> Issue 2</h2>
                 <a class="expand" href="#"><span class="glyphicon glyphicon-collapse-up"></span></a>
-                <blockquote class="description">* One thing * Other &amp;lt;thing&amp;gt;</blockquote>
+                <blockquote class="metadata">
+                    <div class="tags"><span class="glyphicon glyphicon-tags"></span> test</div>
+                    <div class="asign"><span class="glyphicon glyphicon-user"></span> -</div>
+                    <div class="milestone"><span class="glyphicon glyphicon-bookmark"></span> -</div>
+                </blockquote>
+                <div class="well description">* One thing * Other &amp;lt;thing&amp;gt;</div>
             </div>
         </div>
 
