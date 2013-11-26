@@ -151,6 +151,37 @@ testHtmlCharset () {
 </html>' 'testHtmlCharset'
 }
 
+testHtmlTitle () {
+	git issue init -q
+	git config issue.html.title 'New title'
+
+	git issue html -q
+	git checkout -q gh-pages
+
+	assert_file 'index.html' 'testHtmlTitle'
+	assert_equal "$(cat index.html)" '<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>New title</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>New title</h1>
+            </div>
+<p>Nothing to do :)</p>
+        </div>
+
+        <script type="text/javascript" src="js/showdown.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+    </body>
+</html>' 'testHtmlTitle'
+}
+
 testHtmlBranch () {
 	local output
 

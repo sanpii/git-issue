@@ -83,6 +83,10 @@ The URL where twitter bootstrap was download.
 
 The charset specified in the content type. *UTF-8* by default.
 
+### issue.html.title
+
+The title of the page. *Issues tracker* by default.
+
 ## Commands
 
 ### Initialize your issue database

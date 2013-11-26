@@ -108,16 +108,16 @@ HTML=$(cat <<'EOD'
 <html>
     <head>
         <meta http-equiv=\"content-type\" content=\"text/html; charset=${1}\" />
-        <title>Issues tracker</title>
+        <title>${2}</title>
         <link rel=\"stylesheet\" href=\"css/bootstrap.min.css\" />
         <link rel=\"stylesheet\" href=\"css/main.css\" />
     </head>
     <body>
         <div class=\"container\">
             <div class=\"page-header\">
-                <h1>Issues tracker</h1>
+                <h1>${2}</h1>
             </div>
-${2}
+${3}
         </div>
 
         <script type=\"text/javascript\" src=\"js/showdown.js\"></script>
@@ -583,6 +583,7 @@ git_issue_html () {
             </div>"
 	done
 
+	title=$(git config --get issue.html.title || echo 'Issues tracker')
 	charset=$(git config --get issue.html.charset || echo 'UTF-8')
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
@@ -604,7 +605,7 @@ git_issue_html () {
 
 	git_issue_render "$CSS" 'css/main.css'
 	git_issue_render "$JS" 'js/main.js'
-	git_issue_render "$HTML" 'index.html' "$charset" "${issuesList:-<p>Nothing to do :)</p>}"
+	git_issue_render "$HTML" 'index.html' "$charset" "$title" "${issuesList:-<p>Nothing to do :)</p>}"
 
 	say "HTML generated in the '$branch' branch."
 }
