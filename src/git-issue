@@ -354,17 +354,14 @@ git_issue_render () {
 	destination=$2
 	shift 2
 
-	if test ! -f "$destination"
+	if test $# -ne 0
 	then
-		if test $# -ne 0
-		then
-			e=$(eval echo "\"$template\"")
-			template=$(echo "$e")
-		fi
-		echo "$template" > "$destination"
-		git add "$destination"
-		git commit -q -m "Add $destination"
+		e=$(eval echo "\"$template\"")
+		template=$(echo "$e")
 	fi
+	echo "$template" > "$destination"
+	git add "$destination"
+	git commit -q -m "Add $destination"
 }
 
 git_issue_html_escape () {
