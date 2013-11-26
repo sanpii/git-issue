@@ -546,9 +546,9 @@ git_issue_html () {
 		description=$(git_issue_html_escape "$(git_issue_get "$id" 'description')")
 
 		issuesList="$issuesList
-            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
-                <h2><a href="'"'"#${id}"'"'">#</a> ${title}</h2>
-                <blockquote class="'"'"description"'"'">${description}</blockquote>
+            <div id=\"${id}\" class=\"issue status-${status}\">
+                <h2><a href=\"#${id}\">#</a> ${title}</h2>
+                <blockquote class=\"description\">${description}</blockquote>
             </div>"
 	done
 
