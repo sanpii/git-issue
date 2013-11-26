@@ -90,6 +90,36 @@ testHtmlIndex () {
 </html>' 'testHtmlIndex'
 }
 
+testHtmlEmpty () {
+	git issue init -q
+
+	git issue html -q
+	git checkout -q gh-pages
+
+	assert_file 'index.html' 'testHtmlEmpty'
+	assert_equal "$(cat index.html)" '<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>Issues tracker</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-header">
+                <h1>Issues tracker</h1>
+            </div>
+<p>Nothing to do :)</p>
+        </div>
+
+        <script type="text/javascript" src="js/showdown.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+    </body>
+</html>' 'testHtmlEmpty'
+}
+
 testHtmlCharset () {
 	git issue init -q
 	git config issue.html.charset 'ISO8859-1'
@@ -111,7 +141,7 @@ testHtmlCharset () {
             <div class="page-header">
                 <h1>Issues tracker</h1>
             </div>
-
+<p>Nothing to do :)</p>
         </div>
 
         <script type="text/javascript" src="js/showdown.js"></script>
