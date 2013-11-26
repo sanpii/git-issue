@@ -170,6 +170,9 @@ Bidirectional synchronize:
 You can see the result for this repository
 [here](http://sanpii.github.io/git-issue).
 
+This command that typically used in a hook post-receive for automatically update
+the pages.
+
 ## A bug?
 
 Clone this repository and use *git-issue* on it. After creating an issue, send
