@@ -486,13 +486,25 @@ git_issue_html () {
 	if test ! -f "css/main.css"
 	then
 		echo '.issue.status-close h2 {
-	text-decoration: line-through;
+    text-decoration: line-through;
 }
 .issue.status-close .description {
-	display: none;
+    display: none;
 }' > css/main.css
 		git add css/main.css
 		git commit -q -m "Add css/main.css"
+	fi
+
+	if test ! -f "js/main.js"
+	then
+		echo '
+$(".issue .description").each(function () {
+    var converter = new Showdown.converter();
+    $(this).html(converter.makeHtml($(this).text()));
+});
+' > js/main.js
+		git add js/main.js
+		git commit -q -m "Add js/main.js"
 	fi
 
 	echo -n '' > index.html
@@ -525,12 +537,7 @@ git_issue_html () {
 
         <script type="text/javascript" src="js/showdown.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript">
-            $(".issue .description").each(function () {
-                var converter = new Showdown.converter();
-                $(this).html(converter.makeHtml($(this).text()));
-            });
-        </script>
+        <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' >>index.html
 

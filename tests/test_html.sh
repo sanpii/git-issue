@@ -68,12 +68,7 @@ testHtmlIndex () {
 
         <script type="text/javascript" src="js/showdown.js"></script>
         <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript">
-            $(".issue .description").each(function () {
-                var converter = new Showdown.converter();
-                $(this).html(converter.makeHtml($(this).text()));
-            });
-        </script>
+        <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' 'testHtmlIndex'
 }
