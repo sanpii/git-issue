@@ -1,0 +1,14 @@
+.issue h2 {
+    display: inline-block;
+}
+
+.issue.status-close h2 {
+    text-decoration: line-through;
+    font-size: 1.2em;
+    color: #CCCCCC;
+    margin: 0;
+}
+
+.issue .metadata .glyphicon {
+    margin-right: 1em;
+}
