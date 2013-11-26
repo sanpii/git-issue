@@ -306,6 +306,46 @@ git_issue_get () {
 		grep "^$field:.*$" $id | sed "s/^$field://" | sed 's/^ //'
 	fi
 }
+
+git_issue_download_vendor () {
+	url=$1
+	destination=$2
+
+	if test ! -d $(dirname $destination)
+	then
+		mkdir -p $(dirname $destination)
+	fi
+
+	if test ! -f "$destination"
+	then
+		say $(eval_gettextln "Download $destination")
+		wget $url -q -O $destination
+		git add $destination
+		git commit -q -m "Add $destination"
+	fi
+}
+
+git_issue_render () {
+	template="$1"
+	destination=$2
+	shift 2
+
+	if test ! -f "$destination"
+	then
+		if test $# -ne 0
+		then
+			e=$(eval echo "\"$template\"")
+			template=$(echo "$e")
+		fi
+		echo "$template" > "$destination"
+		git add "$destination"
+		git commit -q -m "Add $destination"
+	fi
+}
+
+git_issue_html_escape () {
+	echo "$1" | sed 's/&/\&amp;amp;/g; s/</\&amp;lt;/g; s/>/\&amp;gt;/g; s/"/\&amp;quot;/g'
+}
 # }}}
 # {{{ Commands
 git_issue_help () {
@@ -488,46 +528,6 @@ git_issue_close () {
 	git_issue_edit "$@"
 }
 
-git_issue_download_vendor () {
-	url=$1
-	destination=$2
-
-	if test ! -d $(dirname $destination)
-	then
-		mkdir -p $(dirname $destination)
-	fi
-
-	if test ! -f "$destination"
-	then
-		say $(eval_gettextln "Download $destination")
-		wget $url -q -O $destination
-		git add $destination
-		git commit -q -m "Add $destination"
-	fi
-}
-
-git_issue_render () {
-	template="$1"
-	destination=$2
-	shift 2
-
-	if test ! -f "$destination"
-	then
-		if test $# -ne 0
-		then
-			e=$(eval echo "\"$template\"")
-			template=$(echo "$e")
-		fi
-		echo "$template" > "$destination"
-		git add "$destination"
-		git commit -q -m "Add $destination"
-	fi
-}
-
-html_escape () {
-	echo "$1" | sed 's/&/\&amp;amp;/g; s/</\&amp;lt;/g; s/>/\&amp;gt;/g; s/"/\&amp;quot;/g'
-}
-
 git_issue_html () {
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
@@ -551,9 +551,9 @@ git_issue_html () {
 	issuesList=''
 	for id in $(git ls-files -o | grep '[[:digit:]]\+')
 	do
-		title=$(html_escape "$(git_issue_get "$id" 'title')")
-		status=$(html_escape "$(git_issue_get "$id" 'status')")
-		description=$(html_escape "$(git_issue_get "$id" 'description')")
+		title=$(git_issue_html_escape "$(git_issue_get "$id" 'title')")
+		status=$(git_issue_html_escape "$(git_issue_get "$id" 'status')")
+		description=$(git_issue_html_escape "$(git_issue_get "$id" 'description')")
 
 		issuesList="$issuesList
             <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
