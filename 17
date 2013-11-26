@@ -1,0 +1,9 @@
+title: Customize templates
+status: new
+assign:
+tags: html
+milestone:
+type: enhancement
+
+Allow modify html header/footer, main.css and main.js via configuration. Place
+custom templates in ~/.config/git-issue/
