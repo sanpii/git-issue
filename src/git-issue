@@ -64,6 +64,51 @@ VERBOSE=false
 GIT_QUIET=
 COMMIT_MESSAGE=
 
+# {{{ Templates
+CSS=$(cat <<'EOD'
+.issue.status-close h2 {
+    text-decoration: line-through;
+}
+
+.issue.status-close .description {
+    display: none;
+}
+EOD
+)
+
+JS=$(cat <<'EOD'
+$(".issue .description").each(function () {
+    var converter = new Showdown.converter();
+    $(this).html(converter.makeHtml($(this).text()));
+})
+EOD
+)
+
+HTML=$(cat <<'EOD'
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Issues tracker</title>
+        <link rel=\"stylesheet\" href=\"css/bootsrap.css\" />
+        <link rel=\"stylesheet\" href=\"css/main.css\" />
+    </head>
+    <body>
+        <div class=\"container\">
+            <div class=\"page-header\">
+                <h1>Issues tracker</h1>
+            </div>
+${1}
+        </div>
+
+        <script type=\"text/javascript\" src=\"js/showdown.js\"></script>
+        <script type=\"text/javascript\" src=\"js/jquery.js\"></script>
+        <script type=\"text/javascript\" src=\"js/main.js\"></script>
+    </body>
+</html>
+EOD
+)
+
+# }}}
 # {{{ Shell common
 function_exists () {
 	function=$1
@@ -461,6 +506,24 @@ git_issue_download_vendor () {
 	fi
 }
 
+git_issue_render () {
+	template="$1"
+	destination=$2
+	shift 2
+
+	if test ! -f "$destination"
+	then
+		if test $# -ne 0
+		then
+			e=$(eval echo "\"$template\"")
+			template=$(echo "$e")
+		fi
+		echo "$template" > "$destination"
+		git add "$destination"
+		git commit -q -m "Add $destination"
+	fi
+}
+
 html_escape () {
 	echo "$1" | sed 's/&/\&amp;amp;/g; s/</\&amp;lt;/g; s/>/\&amp;gt;/g; s/"/\&amp;quot;/g'
 }
@@ -477,72 +540,30 @@ git_issue_html () {
 	fi
 	git checkout -q $branch 2>/dev/null
 
-	git_issue_download_vendor $showdow 'js/showdown.js'
-	git_issue_download_vendor $jquery 'js/jquery.js'
-	git_issue_download_vendor $bootsrap 'css/bootsrap.css'
+	git_issue_download_vendor "$showdow" 'js/showdown.js'
+	git_issue_download_vendor "$jquery" 'js/jquery.js'
+	git_issue_download_vendor "$bootsrap" 'css/bootsrap.css'
+
+	git_issue_render "$CSS" 'css/main.css'
+	git_issue_render "$JS" 'js/main.js'
 
 	git checkout $ISSUE_BRANCH '*' 2>/dev/null && git reset .
-
-	if test ! -f "css/main.css"
-	then
-		echo '.issue.status-close h2 {
-    text-decoration: line-through;
-}
-.issue.status-close .description {
-    display: none;
-}' > css/main.css
-		git add css/main.css
-		git commit -q -m "Add css/main.css"
-	fi
-
-	if test ! -f "js/main.js"
-	then
-		echo '
-$(".issue .description").each(function () {
-    var converter = new Showdown.converter();
-    $(this).html(converter.makeHtml($(this).text()));
-});
-' > js/main.js
-		git add js/main.js
-		git commit -q -m "Add js/main.js"
-	fi
-
-	echo -n '' > index.html
-	echo '<!DOCTYPE html>
-<html>
-    <head>
-        <title>Issues tracker</title>
-        <link rel="stylesheet" href="css/bootsrap.css" />
-        <link rel="stylesheet" href="css/main.css" />
-    </head>
-    <body>
-        <div class="container">
-            <div class="page-header">
-                <h1>Issues tracker</h1>
-            </div>
-' >>index.html
+	issuesList=''
 	for id in $(git ls-files -o | grep '[[:digit:]]\+')
 	do
 		title=$(html_escape "$(git_issue_get "$id" 'title')")
 		status=$(html_escape "$(git_issue_get "$id" 'status')")
 		description=$(html_escape "$(git_issue_get "$id" 'description')")
 
-		echo "            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
+		issuesList="$issuesList
+            <div id="'"'"${id}"'"'" class="'"'"issue status-${status}"'"'">
                 <h2><a href="'"'"#${id}"'"'">#</a> ${title}</h2>
                 <blockquote class="'"'"description"'"'">${description}</blockquote>
-            </div>" >>index.html
-
+            </div>"
 	done
-	echo '        </div>
 
-        <script type="text/javascript" src="js/showdown.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
-        <script type="text/javascript" src="js/main.js"></script>
-    </body>
-</html>' >>index.html
+	git_issue_render "$HTML" 'index.html' "$issuesList"
 
-	git add index.html
-	git commit -q -m 'Generate index.html'
 	rm $(git ls-files -o) 2>/dev/null
 
 	say "HTML generated in the '$branch' branch."
