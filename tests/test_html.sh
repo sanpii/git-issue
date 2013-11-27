@@ -61,6 +61,14 @@ testHtmlIndex () {
                 <h1>Issues tracker</h1>
             </div>
 
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    This bug tracker uses <a
+                    href="https://github.com/sanpii/git-issue/">git-issue</a>.
+                    Clone the repository to report a new issue.
+                </div>
+            </div>
+
             <div id="1" class="issue status-new">
                 <h2><a href="#1">#</a> [bug] Issue 1</h2>
                 <a class="expand" href="#"><span class="glyphicon glyphicon-collapse-up"></span></a>
@@ -110,6 +118,14 @@ testHtmlEmpty () {
             <div class="page-header">
                 <h1>Issues tracker</h1>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    This bug tracker uses <a
+                    href="https://github.com/sanpii/git-issue/">git-issue</a>.
+                    Clone the repository to report a new issue.
+                </div>
+            </div>
 <p>Nothing to do :)</p>
         </div>
 
@@ -141,6 +157,14 @@ testHtmlCharset () {
             <div class="page-header">
                 <h1>Issues tracker</h1>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    This bug tracker uses <a
+                    href="https://github.com/sanpii/git-issue/">git-issue</a>.
+                    Clone the repository to report a new issue.
+                </div>
+            </div>
 <p>Nothing to do :)</p>
         </div>
 
@@ -171,6 +195,14 @@ testHtmlTitle () {
         <div class="container">
             <div class="page-header">
                 <h1>New title</h1>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    This bug tracker uses <a
+                    href="https://github.com/sanpii/git-issue/">git-issue</a>.
+                    Clone the repository to report a new issue.
+                </div>
             </div>
 <p>Nothing to do :)</p>
         </div>
