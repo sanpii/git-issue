@@ -1,3 +1,5 @@
+'use strict';
+
 $(".issue .description").each(function () {
     var converter = new Showdown.converter();
     $(this).html(converter.makeHtml($(this).text()));
