@@ -4,7 +4,7 @@ setUp () {
 	createTestRepository
 
 	git config issue.html.showdow file:///dev/null
-	git config issue.html.jquery file:///dev/null
+	git config issue.html.zepto file:///dev/null
 	git config issue.html.bootstrap file:///dev/null
 }
 
@@ -21,7 +21,7 @@ testHtmlVendor () {
 	local status=$?
 
 	assert_equal "$output" "Download js/showdown.js
-Download js/jquery.js
+Download js/zepto.js
 Download css/bootstrap.min.css
 Download fonts/glyphicons-halflings-regular.woff
 Download fonts/glyphicons-halflings-regular.ttf
@@ -33,7 +33,7 @@ HTML generated in the 'gh-pages' branch." 'testHtmlVendor'
 	git checkout -q gh-pages
 
 	assert_file 'js/showdown.js' 'testHtmlVendor'
-	assert_file 'js/jquery.js' 'testHtmlVendor'
+	assert_file 'js/zepto.js' 'testHtmlVendor'
 }
 
 testHtmlIndex () {
@@ -92,7 +92,7 @@ testHtmlIndex () {
         </div>
 
         <script type="text/javascript" src="js/showdown.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/zepto.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' 'testHtmlIndex'
@@ -130,7 +130,7 @@ testHtmlEmpty () {
         </div>
 
         <script type="text/javascript" src="js/showdown.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/zepto.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' 'testHtmlEmpty'
@@ -169,7 +169,7 @@ testHtmlCharset () {
         </div>
 
         <script type="text/javascript" src="js/showdown.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/zepto.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' 'testHtmlCharset'
@@ -208,7 +208,7 @@ testHtmlTitle () {
         </div>
 
         <script type="text/javascript" src="js/showdown.js"></script>
-        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/zepto.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>' 'testHtmlTitle'
@@ -224,7 +224,7 @@ testHtmlBranch () {
 	local status=$?
 
 	assert_equal "$output" "Download js/showdown.js
-Download js/jquery.js
+Download js/zepto.js
 Download css/bootstrap.min.css
 Download fonts/glyphicons-halflings-regular.woff
 Download fonts/glyphicons-halflings-regular.ttf

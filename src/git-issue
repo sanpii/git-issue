@@ -92,8 +92,8 @@ $(".issue .description").each(function () {
 });
 
 $(".issue .expand").on('click', function () {
-    var description = $(this).nextAll(".description");
-    var metadata = $(this).nextAll(".metadata");
+    var metadata = $(this).next(".metadata");
+    var description = metadata.next(".description");
     var expand = $(this).children();
 
     expand.toggleClass("glyphicon-collapse-up");
@@ -131,7 +131,7 @@ ${3}
         </div>
 
         <script type=\"text/javascript\" src=\"js/showdown.js\"></script>
-        <script type=\"text/javascript\" src=\"js/jquery.js\"></script>
+        <script type=\"text/javascript\" src=\"js/zepto.js\"></script>
         <script type=\"text/javascript\" src=\"js/main.js\"></script>
     </body>
 </html>
@@ -594,7 +594,7 @@ git_issue_html () {
 	charset=$(git config --get issue.html.charset || echo 'UTF-8')
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
-	jquery=$(git config --get issue.html.jquery || echo 'http://code.jquery.com/jquery-2.0.3.min.js')
+	zepto=$(git config --get issue.html.zepto || echo 'http://zeptojs.com/zepto.min.js')
 	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2')
 
 	if ! git_local_branch_exists "$branch"
@@ -604,7 +604,7 @@ git_issue_html () {
 	git checkout -q $branch 2>/dev/null
 
 	git_issue_download_vendor "$showdow" 'js/showdown.js'
-	git_issue_download_vendor "$jquery" 'js/jquery.js'
+	git_issue_download_vendor "$zepto" 'js/zepto.js'
 	for f in "css/bootstrap.min.css" "fonts/glyphicons-halflings-regular.woff" "fonts/glyphicons-halflings-regular.ttf" "fonts/glyphicons-halflings-regular.svg" "fonts/glyphicons-halflings-regular.eot"
 	do
 		git_issue_download_vendor "$bootsrap/$f" "$f"
