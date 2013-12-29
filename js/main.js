@@ -6,8 +6,8 @@ $(".issue .description").each(function () {
 });
 
 $(".issue .expand").on('click', function () {
-    var description = $(this).nextAll(".description");
-    var metadata = $(this).nextAll(".metadata");
+    var metadata = $(this).next(".metadata");
+    var description = metadata.next(".description");
     var expand = $(this).children();
 
     expand.toggleClass("glyphicon-collapse-up");
