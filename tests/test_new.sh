@@ -150,4 +150,18 @@ Additionally, your index contains uncommitted changes.' 'testNewUnstashWithError
 	chmod 644 test
 }
 
+testNewWithNumericFile () {
+	local output
+
+	git issue init -q
+	touch 'test1.txt'
+
+	output="$(git issue new --no-edit 2>&1)"
+	local status=$?
+
+	assert_equal "$output" 'Issue #1 created.
+No stash found.' 'testNewWithIgnoredFiles'
+	assert_numeq $status 0 'testNewWithIgnoredFiles'
+}
+
 . $CWD/tests/common.sh

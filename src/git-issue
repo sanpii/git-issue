@@ -270,7 +270,7 @@ git_issue_parse_args () {
 }
 
 git_issue_get_last_id () {
-	local id=$(ls -1 | grep '[0-9]\+' | sort -n | tail -1)
+	local id=$(ls -1 | grep '^[0-9]\+$' | sort -n | tail -1)
 
 	if test -z $id
 	then
