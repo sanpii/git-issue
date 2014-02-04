@@ -309,7 +309,7 @@ git_issue_switch_branch () {
 
 git_issue_restore_branch () {
 	git checkout -q $OLD_REV
-	$STASHED && git stash pop -q
+	$STASHED && git stash pop -q 2>/dev/null
 }
 
 git_issue_commit () {
