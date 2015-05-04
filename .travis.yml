@@ -1,0 +1,9 @@
+before_script:
+    - git submodule init
+    - git submodule update
+
+    - git config --global user.email "you@example.com"
+    - git config --global user.name "Your Name"
+
+script:
+    - ./runtests.sh

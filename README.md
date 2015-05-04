@@ -1,6 +1,6 @@
 # Git-issue
 
-[![Build Status](http://ci.homecomputing.fr/git-issue/build/status)](http://ci.homecomputing.fr/git-issue)
+[![Build Status](https://travis-ci.org/sanpii/git-issue.svg)](https://travis-ci.org/sanpii/git-issue)
 
 *Git-issue* is a bug tracker based on git.
 
