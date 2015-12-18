@@ -141,7 +141,7 @@ EOD
 # }}}
 # {{{ Shell common
 function_exists () {
-	function=$1
+	local function=$1
 
 	type $function >/dev/null 2>&1
 }
@@ -244,7 +244,9 @@ git_issue_parse_args () {
 				shift 2
 			;;
 			--?*)
-				name=$1
+				local name=$1
+				local value
+
 				if test $(echo $2 | head -c 1) != '-'
 				then
 					value=$2
@@ -342,8 +344,8 @@ git_issue_get_all () {
 }
 
 git_issue_download_vendor () {
-	url=$1
-	destination=$2
+	local url=$1
+	local destination=$2
 
 	if test ! -d $(dirname $destination)
 	then
@@ -360,13 +362,13 @@ git_issue_download_vendor () {
 }
 
 git_issue_render () {
-	template="$1"
-	destination=$2
+	local template="$1"
+	local destination=$2
 	shift 2
 
 	if test $# -ne 0
 	then
-		e=$(eval echo "\"$template\"")
+		local e=$(eval echo "\"$template\"")
 		template=$(echo "$e")
 	fi
 	echo "$template" > "$destination"
@@ -398,6 +400,8 @@ git_issue_new () {
 	local description="$1"
 	local id=$(( $(git_issue_get_last_id) + 1))
 	local metadata=''
+	local name
+	local value
 
 	if test ! -v "status"
 	then
@@ -440,12 +444,13 @@ git_issue_show () {
 
 git_issue_edit () {
 	local id="$1"
+	local edited=false
+	local value
 
 	git_issue_switch_branch
 
 	test -f "$id" || die $(eval_gettextln "Issue #${id} doesn't exist")
 
-	edited=false
 	for name in status title assign tags milestone type
 	do
 		if test -v $name
@@ -486,7 +491,7 @@ git_issue_list () {
 	do
 		if test -v $name -a -n "$issues"
 		then
-			value=$(eval echo \$$name | sed 's/|/\\|/g')
+			local value=$(eval echo \$$name | sed 's/|/\\|/g')
 			if test $(echo $value | head -c 1) != '~'
 			then
 				issues=$(grep -l "^$name: \($value\)$" $issues)
@@ -560,9 +565,10 @@ git_issue_close () {
 }
 
 git_issue_html () {
+	local issuesList=''
+
 	git_issue_switch_branch
 
-	issuesList=''
 	for id in $(git_issue_get_all)
 	do
 		title=$(git_issue_html_escape "$(git_issue_get "$id" 'title')")
@@ -572,6 +578,7 @@ git_issue_html () {
 		asign=$(git_issue_html_escape "$(git_issue_get "$id" 'asign')")
 		milestone=$(git_issue_html_escape "$(git_issue_get "$id" 'milestone')")
 		type=$(git_issue_html_escape "$(git_issue_get "$id" 'type')")
+
 		if test -n "$type"
 		then
 			type="[$type] "
@@ -618,9 +625,9 @@ git_issue_html () {
 }
 # }}}
 
-OLD_REV=$(git_get_current_rev)
+readonly OLD_REV=$(git_get_current_rev)
 STASHED=false
-ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
+readonly ISSUE_BRANCH=$(git config --get issue.branch || echo 'issues')
 
 trap 'git_issue_restore_branch' EXIT
 
