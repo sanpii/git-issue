@@ -78,7 +78,7 @@ The URL where zepto was download.
 ### issue.html.bootstrap
 
 The URL where twitter bootstrap was download.
-<http://netdna.bootstrapcdn.com/bootstrap/3.0.2> by default.
+<http://netdna.bootstrapcdn.com/bootstrap/3.4.1> by default.
 
 ### issue.html.charset
 

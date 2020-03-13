@@ -602,7 +602,7 @@ git_issue_html () {
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
 	showdow=$(git config --get issue.html.showdow || echo 'https://raw.githubusercontent.com/coreyti/showdown/1.9.1/dist/showdown.min.js')
 	zepto=$(git config --get issue.html.zepto || echo 'http://zeptojs.com/zepto.min.js')
-	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2')
+	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.4.1')
 
 	if ! git_local_branch_exists "$branch"
 	then
