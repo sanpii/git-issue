@@ -1,6 +1,7 @@
 # Git-issue
 
 [![Build Status](https://travis-ci.org/sanpii/git-issue.svg)](https://travis-ci.org/sanpii/git-issue)
+[![Build Status](https://gitlab.com/sanpi/git-issue/badges/master/build.svg)](https://gitlab.com/sanpi/git-issue/commits/master)
 
 *Git-issue* is a bug tracker based on git.
 
