@@ -4,7 +4,7 @@
 
 *Git-issue* is a bug tracker based on git.
 
-![](doc/screenshot.png)
+![](screenshot.png)
 
 ## Why?
 
