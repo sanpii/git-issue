@@ -87,7 +87,7 @@ JS=$(cat <<'EOD'
 'use strict';
 
 $(".issue .description").each(function () {
-    var converter = new Showdown.converter();
+    var converter = new showdown.Converter();
     $(this).html(converter.makeHtml($(this).text()));
 });
 
@@ -600,7 +600,7 @@ git_issue_html () {
 	title=$(git config --get issue.html.title || echo 'Issues tracker')
 	charset=$(git config --get issue.html.charset || echo 'UTF-8')
 	branch=$(git config --get issue.html.branch || echo 'gh-pages')
-	showdow=$(git config --get issue.html.showdow || echo 'http://raw.github.com/coreyti/showdown/master/src/showdown.js')
+	showdow=$(git config --get issue.html.showdow || echo 'https://raw.githubusercontent.com/coreyti/showdown/1.9.1/dist/showdown.min.js')
 	zepto=$(git config --get issue.html.zepto || echo 'http://zeptojs.com/zepto.min.js')
 	bootsrap=$(git config --get issue.html.bootstrap || echo 'http://netdna.bootstrapcdn.com/bootstrap/3.0.2')
 

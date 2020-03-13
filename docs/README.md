@@ -68,7 +68,7 @@ The branch where HTML pages as generated. *gh-pages* by default.
 ### issue.html.showdow
 
 The URL where showdow.js was download.
-<http://raw.github.com/coreyti/showdown/master/src/showdown.js> by default.
+<https://raw.githubusercontent.com/coreyti/showdown/1.9.1/dist/showdown.min.js> by default.
 
 ### issue.html.zepto
 
