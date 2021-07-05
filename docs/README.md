@@ -1,6 +1,5 @@
 # Git-issue
 
-[![Build Status](https://travis-ci.org/sanpii/git-issue.svg)](https://travis-ci.org/sanpii/git-issue)
 [![.github/workflows/ci.yml](https://github.com/sanpii/git-issue/actions/workflows/ci.yml/badge.svg)](https://github.com/sanpii/git-issue/actions/workflows/ci.yml)
 [![pipeline status](https://gitlab.com/sanpi/git-issue/badges/main/pipeline.svg)](https://gitlab.com/sanpi/git-issue/-/commits/main)
 
